@@ -1,34 +1,38 @@
-import { RAW } from "./raw.js";
-import { RESPO_MAP } from "./respo-map.js";
+<pre id="index"></pre>
 
-function colorIcon(status){
-  if(status === "green") return "🟩";
-  if(status === "yellow") return "🟨";
-  if(status === "red") return "🟥";
-  if(status === "blue") return "🟦";
-}
+<script type="module">
+  import { RAW } from "./respo.js";
+  import { RESPO_MAP } from "./respo-map.js";
 
-function render(){
-  let out = "RESPO 100 :: MEGA-INDEX\n--------------------------------\n";
+  function colorIcon(status){
+    if(status === "green")  return "🟩";
+    if(status === "yellow") return "🟨";
+    if(status === "red")    return "🟥";
+    if(status === "blue")   return "🟦";
+  }
 
-  Object.keys(RAW).forEach((key, i) => {
-    const r = RAW[key];
-    const color = colorIcon(r.status);
-    const tmp = r.tmp;
-    const path = RESPO_MAP[key] || "kein-pfad";
+  function render(){
+    let out = "RESPO 100 :: MEGA-INDEX\n--------------------------------\n";
 
-    out += `${(i+1).toString().padEnd(4)} → ((${key})) ${color} tmp:${tmp}`;
+    Object.keys(RAW).forEach((key, i) => {
+      const r = RAW[key];
+      const color = colorIcon(r.status);
+      const tmp = r.tmp;
+      const path = RESPO_MAP[key] || "kein-pfad";
 
-    // Navi-Regel
-    if(r.status === "green"){
-      out += `\n      NAVI → ${path}`;
-    }
+      out += `${(i+1).toString().padEnd(4)} → ((${key})) ${color} tmp:${tmp}`;
 
-    out += "\n";
-  });
+      if(r.status === "green"){
+        out += `\n NAVI → ${path}`;
+      }
 
-  out += "--------------------------------\nNC.link aktiv\nÜbergang aktiv\n";
-  document.getElementById("index").textContent = out;
-}
+      out += "\n";
+    });
 
-render();
+    out += "--------------------------------\nNC.link aktiv\nÜbergang aktiv\n";
+
+    document.getElementById("index").textContent = out;
+  }
+
+  render();
+</script>
