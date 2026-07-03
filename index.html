@@ -1,61 +1,34 @@
-<pre id="index"></pre>
+import { RAW } from "./raw.js";
+import { RESPO_MAP } from "./respo-map.js";
 
-<script>
-const RESPOS = [
-  { id: 1,  name: "WpiR",      color: "🟩", tmp: "0x1F" },
-  { id: 2,  name: "dir",       color: "🟩", tmp: "0x2A" },
-  { id: 3,  name: "RUN8",      color: "🟨", tmp: "0x3C" },
-  { id: 4,  name: "FIT",       color: "🟨", tmp: "0x4D" },
-  { id: 5,  name: "FAIL",      color: "🟥", tmp: "0xFF" },
-  { id: 6,  name: "9vec3tor",  color: "🟩", tmp: "0x9V" },
-  { id: 7,  name: "CLONE",     color: "🟨", tmp: "0xC1" },
-  { id: 8,  name: "ONLINE",    color: "🟩", tmp: "0x0N" },
-  { id: 9,  name: "TMP",       color: "🟨", tmp: "0xT9" },
-  { id: 10, name: "3hit90",    color: "🟦", tmp: "0x99" }
-];
-
-// Auto‑Generierung für Top20 → Top100
-for (let i = 11; i <= 100; i++) {
-  RESPOS.push({
-    id: i,
-    name: "respo" + i,
-    color: (i === 99 ? "🟦" : "🟩"),
-    tmp: "0x" + i.toString(16).toUpperCase()
-  });
+function colorIcon(status){
+  if(status === "green") return "🟩";
+  if(status === "yellow") return "🟨";
+  if(status === "red") return "🟥";
+  if(status === "blue") return "🟦";
 }
 
-function renderIndex() {
-  let out = "RESPO 100 :: MEGA-INDEX\n";
-  out += "--------------------------------\n";
+function render(){
+  let out = "RESPO 100 :: MEGA-INDEX\n--------------------------------\n";
 
-  out += "TOP10\n";
-  RESPOS.slice(0,10).forEach(r => {
-    out += `${r.id.toString().padEnd(4)} → ((${r.name})) ${r.color} tmp:${r.tmp}\n`;
+  Object.keys(RAW).forEach((key, i) => {
+    const r = RAW[key];
+    const color = colorIcon(r.status);
+    const tmp = r.tmp;
+    const path = RESPO_MAP[key] || "kein-pfad";
+
+    out += `${(i+1).toString().padEnd(4)} → ((${key})) ${color} tmp:${tmp}`;
+
+    // Navi-Regel
+    if(r.status === "green"){
+      out += `\n      NAVI → ${path}`;
+    }
+
+    out += "\n";
   });
 
-  out += "\n--------------------------------\nTOP20\n";
-  RESPOS.slice(10,20).forEach(r => {
-    out += `${r.id.toString().padEnd(4)} → ((${r.name})) ${r.color} tmp:${r.tmp}\n`;
-  });
-
-  out += "\n--------------------------------\nTOP50\n";
-  RESPOS.slice(20,50).forEach(r => {
-    out += `${r.id.toString().padEnd(4)} → ((${r.name})) ${r.color} tmp:${r.tmp}\n`;
-  });
-
-  out += "\n--------------------------------\nTOP100\n";
-  RESPOS.slice(50,100).forEach(r => {
-    out += `${r.id.toString().padEnd(4)} → ((${r.name})) ${r.color} tmp:${r.tmp}\n`;
-  });
-
-  out += "--------------------------------\n";
-  out += "NC.link aktiv\n";
-  out += "tmp‑flux stabil\n";
-  out += "Übergang aktiv\n";
-
+  out += "--------------------------------\nNC.link aktiv\nÜbergang aktiv\n";
   document.getElementById("index").textContent = out;
 }
 
-renderIndex();
-</script>
-
+render();
