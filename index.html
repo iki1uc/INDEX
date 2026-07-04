@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>RESPO 100 :: MEGA-INDEX</title>
+  <title>MEGA-INDEX :: RESPO 100</title>
   <style>
     body {
       background: #111;
@@ -19,25 +19,30 @@
 </head>
 
 <body>
-  <pre id="index">Lade RESPO…</pre>
+  <pre id="index">Lade MEGA-INDEX…</pre>
 
   <script type="module">
-    // --- Standalone RAW-Daten ---
+
+    // -----------------------------------------
+    // 1) RESPO-Daten (intern, keine externen Dateien)
+    // -----------------------------------------
     const RAW = {
-      A1: { status: "green", tmp: 12 },
-      B2: { status: "yellow", tmp: 7 },
-      C3: { status: "red", tmp: 0 },
-      D4: { status: "blue", tmp: 3 }
+      A1: { status: "green", tmp: 12, online: true,  wartung: false },
+      B2: { status: "yellow", tmp: 7, online: false, wartung: true  },
+      C3: { status: "red", tmp: 0, online: false, wartung: false },
+      D4: { status: "blue", tmp: 3, online: true,  wartung: false }
     };
 
-    // --- Standalone RESPO_MAP ---
     const RESPO_MAP = {
-      A1: "pfad/zu/A1",
-      B2: "pfad/zu/B2",
-      C3: "pfad/zu/C3",
-      D4: "pfad/zu/D4"
+      A1: "modul/A1",
+      B2: "modul/B2",
+      C3: "modul/C3",
+      D4: "modul/D4"
     };
 
+    // -----------------------------------------
+    // 2) Icons
+    // -----------------------------------------
     function colorIcon(status){
       if(status === "green")  return "🟩";
       if(status === "yellow") return "🟨";
@@ -46,6 +51,17 @@
       return "⬜";
     }
 
+    function onlineIcon(flag){
+      return flag ? "🟢 online" : "🔴 offline";
+    }
+
+    function wartungIcon(flag){
+      return flag ? "⚠️ Wartung" : "✔️ ok";
+    }
+
+    // -----------------------------------------
+    // 3) Render-Funktion
+    // -----------------------------------------
     function render(){
       let out = "RESPO 100 :: MEGA-INDEX\n--------------------------------\n";
 
@@ -55,10 +71,11 @@
         const tmp = r.tmp;
         const path = RESPO_MAP[key] || "kein-pfad";
 
-        out += `${String(i+1).padEnd(4)} → ((${key})) ${color} tmp:${tmp}`;
+        out += `${String(i+1).padEnd(4)} → ((${key})) ${color} tmp:${tmp}\n`;
+        out += `     STATUS → ${onlineIcon(r.online)} | ${wartungIcon(r.wartung)}\n`;
 
         if(r.status === "green"){
-          out += `\n NAVI → ${path}`;
+          out += `     NAVI   → ${path}\n`;
         }
 
         out += "\n";
@@ -69,7 +86,11 @@
       document.getElementById("index").textContent = out;
     }
 
+    // -----------------------------------------
+    // 4) Render starten
+    // -----------------------------------------
     render();
+
   </script>
 </body>
 </html>
