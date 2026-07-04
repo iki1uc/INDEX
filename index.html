@@ -2,95 +2,49 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>MEGA-INDEX :: RESPO 100</title>
+  <title>INDEX :: ROOT</title>
   <style>
-    body {
-      background: #111;
-      color: #eee;
-      font-family: monospace;
-      padding: 20px;
-      white-space: pre;
-    }
-    #index {
-      font-size: 14px;
-      line-height: 1.4;
-    }
+    body { background:#111; color:#eee; font-family:monospace; padding:20px; }
+    pre { white-space:pre; }
   </style>
 </head>
 
 <body>
-  <pre id="index">Lade MEGA-INDEX…</pre>
+<pre id="root">Lade A und B…</pre>
 
-  <script type="module">
+<script>
+async function load(url){
+  try{
+    const res = await fetch(url);
+    if(!res.ok) return `FEHLER: ${url} nicht erreichbar`;
+    return await res.text();
+  }catch(e){
+    return `FEHLER: ${url} offline`;
+  }
+}
 
-    // -----------------------------------------
-    // 1) RESPO-Daten (intern, keine externen Dateien)
-    // -----------------------------------------
-    const RAW = {
-      A1: { status: "green", tmp: 12, online: true,  wartung: false },
-      B2: { status: "yellow", tmp: 7, online: false, wartung: true  },
-      C3: { status: "red", tmp: 0, online: false, wartung: false },
-      D4: { status: "blue", tmp: 3, online: true,  wartung: false }
-    };
+async function render(){
+  const A = await load("indexA.html");
+  const B = await load("indexB.html");
 
-    const RESPO_MAP = {
-      A1: "modul/A1",
-      B2: "modul/B2",
-      C3: "modul/C3",
-      D4: "modul/D4"
-    };
+  const out =
+`INDEX :: ROOT
+--------------------------------
+A-INDEX geladen:
+${A}
 
-    // -----------------------------------------
-    // 2) Icons
-    // -----------------------------------------
-    function colorIcon(status){
-      if(status === "green")  return "🟩";
-      if(status === "yellow") return "🟨";
-      if(status === "red")    return "🟥";
-      if(status === "blue")   return "🟦";
-      return "⬜";
-    }
+--------------------------------
+B-INDEX geladen:
+${B}
 
-    function onlineIcon(flag){
-      return flag ? "🟢 online" : "🔴 offline";
-    }
+--------------------------------
+Vergleich aktiv
+`;
 
-    function wartungIcon(flag){
-      return flag ? "⚠️ Wartung" : "✔️ ok";
-    }
+  document.getElementById("root").textContent = out;
+}
 
-    // -----------------------------------------
-    // 3) Render-Funktion
-    // -----------------------------------------
-    function render(){
-      let out = "RESPO 100 :: MEGA-INDEX\n--------------------------------\n";
-
-      Object.keys(RAW).forEach((key, i) => {
-        const r = RAW[key];
-        const color = colorIcon(r.status);
-        const tmp = r.tmp;
-        const path = RESPO_MAP[key] || "kein-pfad";
-
-        out += `${String(i+1).padEnd(4)} → ((${key})) ${color} tmp:${tmp}\n`;
-        out += `     STATUS → ${onlineIcon(r.online)} | ${wartungIcon(r.wartung)}\n`;
-
-        if(r.status === "green"){
-          out += `     NAVI   → ${path}\n`;
-        }
-
-        out += "\n";
-      });
-
-      out += "--------------------------------\nNC.link aktiv\nÜbergang aktiv\n";
-
-      document.getElementById("index").textContent = out;
-    }
-
-    // -----------------------------------------
-    // 4) Render starten
-    // -----------------------------------------
-    render();
-
-  </script>
+render();
+</script>
 </body>
 </html>
