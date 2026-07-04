@@ -1,38 +1,75 @@
-<pre id="index"></pre>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>RESPO 100 :: MEGA-INDEX</title>
+  <style>
+    body {
+      background: #111;
+      color: #eee;
+      font-family: monospace;
+      padding: 20px;
+      white-space: pre;
+    }
+    #index {
+      font-size: 14px;
+      line-height: 1.4;
+    }
+  </style>
+</head>
 
-<script type="module">
-  import { RAW } from "./respo.js";
-  import { RESPO_MAP } from "./respo-map.js";
+<body>
+  <pre id="index">Lade RESPO…</pre>
 
-  function colorIcon(status){
-    if(status === "green")  return "🟩";
-    if(status === "yellow") return "🟨";
-    if(status === "red")    return "🟥";
-    if(status === "blue")   return "🟦";
-  }
+  <script type="module">
+    // --- Standalone RAW-Daten ---
+    const RAW = {
+      A1: { status: "green", tmp: 12 },
+      B2: { status: "yellow", tmp: 7 },
+      C3: { status: "red", tmp: 0 },
+      D4: { status: "blue", tmp: 3 }
+    };
 
-  function render(){
-    let out = "RESPO 100 :: MEGA-INDEX\n--------------------------------\n";
+    // --- Standalone RESPO_MAP ---
+    const RESPO_MAP = {
+      A1: "pfad/zu/A1",
+      B2: "pfad/zu/B2",
+      C3: "pfad/zu/C3",
+      D4: "pfad/zu/D4"
+    };
 
-    Object.keys(RAW).forEach((key, i) => {
-      const r = RAW[key];
-      const color = colorIcon(r.status);
-      const tmp = r.tmp;
-      const path = RESPO_MAP[key] || "kein-pfad";
+    function colorIcon(status){
+      if(status === "green")  return "🟩";
+      if(status === "yellow") return "🟨";
+      if(status === "red")    return "🟥";
+      if(status === "blue")   return "🟦";
+      return "⬜";
+    }
 
-      out += `${(i+1).toString().padEnd(4)} → ((${key})) ${color} tmp:${tmp}`;
+    function render(){
+      let out = "RESPO 100 :: MEGA-INDEX\n--------------------------------\n";
 
-      if(r.status === "green"){
-        out += `\n NAVI → ${path}`;
-      }
+      Object.keys(RAW).forEach((key, i) => {
+        const r = RAW[key];
+        const color = colorIcon(r.status);
+        const tmp = r.tmp;
+        const path = RESPO_MAP[key] || "kein-pfad";
 
-      out += "\n";
-    });
+        out += `${String(i+1).padEnd(4)} → ((${key})) ${color} tmp:${tmp}`;
 
-    out += "--------------------------------\nNC.link aktiv\nÜbergang aktiv\n";
+        if(r.status === "green"){
+          out += `\n NAVI → ${path}`;
+        }
 
-    document.getElementById("index").textContent = out;
-  }
+        out += "\n";
+      });
 
-  render();
-</script>
+      out += "--------------------------------\nNC.link aktiv\nÜbergang aktiv\n";
+
+      document.getElementById("index").textContent = out;
+    }
+
+    render();
+  </script>
+</body>
+</html>
