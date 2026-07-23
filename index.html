@@ -1,50 +1,50 @@
 <!DOCTYPE html>
-<html lang="de">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>INDEX :: ROOT</title>
-  <style>
-    body { background:#111; color:#eee; font-family:monospace; padding:20px; }
-    pre { white-space:pre; }
-  </style>
+<meta charset="UTF-8">
+<title>INDEX · ALL · VECTOR · γ∞</title>
+
+<style>
+body { background:#000; color:#0f0; font-family:monospace; padding:40px; }
+.karo { position:absolute; width:28px; height:28px; border:1px solid #333; font-size:8px; }
+.cell { position:absolute; background:#111; padding:5px; border:1px solid #333; }
+.small { width:25px; height:25px; text-align:center; }
+#vector27 { position:relative; height:1200px; }
+#vector81 { position:relative; width:300px; height:300px; margin-top:40px; }
+#index_karo { position:relative; width:600px; height:600px; }
+#all_monitor { white-space:pre; margin-top:40px; }
+</style>
+
+<script src="core/GAM.core.js"></script>
+<script src="core/VECTOR.core.js"></script>
+<script src="core/VECTOR.score.js"></script>
+<script src="core/VECTOR.raum.js"></script>
+<script src="core/VECTOR.markt.js"></script>
+<script src="core/VECTOR.cubemind.js"></script>
+<script src="core/VECTOR.respo.js"></script>
+<script src="core/VECTOR.render.js"></script>
+<script src="core/VECTOR.81.js"></script>
+<script src="core/VECTOR.optimizer.js"></script>
+<script src="core/INDEX.respo.js"></script>
+<script src="core/INDEX.render.js"></script>
+<script src="core/ALL.monitor.js"></script>
+<script src="core/RUN8.js"></script>
+<script src="ALL.core.js"></script>
+
 </head>
 
 <body>
-<pre id="root">Lade A und B…</pre>
+
+<h1>INDEX · ALL · VECTOR · γ∞</h1>
+
+<div id="index_karo"></div>
+<div id="vector27"></div>
+<div id="vector81"></div>
+<pre id="all_monitor"></pre>
 
 <script>
-async function load(url){
-  try{
-    const res = await fetch(url);
-    if(!res.ok) return `FEHLER: ${url} nicht erreichbar`;
-    return await res.text();
-  }catch(e){
-    return `FEHLER: ${url} offline`;
-  }
-}
-
-async function render(){
-  const A = await load("indexA.html");
-  const B = await load("indexB.html");
-
-  const out =
-`INDEX :: ROOT
---------------------------------
-A-INDEX geladen:
-${A}
-
---------------------------------
-B-INDEX geladen:
-${B}
-
---------------------------------
-Vergleich aktiv
-`;
-
-  document.getElementById("root").textContent = out;
-}
-
-render();
+ALL.autoSwitch();
 </script>
+
 </body>
 </html>
