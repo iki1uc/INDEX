@@ -1,45 +1,12 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-  <meta charset="UTF-8">
-  <title>A-INDEX</title>
-</head>
-
-<body>
 <pre id="A">Lade A…</pre>
+<pre id="A_MOVE">Move…</pre>
 
 <script>
-const SERVICES_A = {
-  "A1": "https://example.com/api/status",
-  "A2": "https://example.com/api/health"
-};
-
-function iconOnline(ok){ return ok ? "🟢" : "🔴"; }
-function iconWartung(w){ return w ? "⚠️" : "✔️"; }
-
-async function check(url){
-  try{
-    const res = await fetch(url);
-    if(!res.ok) return {online:false, wartung:true};
-    const data = await res.json().catch(()=>null);
-    return {online:true, wartung:data?.wartung===true};
-  }catch{
-    return {online:false, wartung:true};
-  }
-}
-
-async function render(){
-  let out = "A-INDEX\n--------------------------------\n";
-
-  for(const key of Object.keys(SERVICES_A)){
-    const s = await check(SERVICES_A[key]);
-    out += `${key} → ${iconOnline(s.online)} online | ${iconWartung(s.wartung)} Wartung\n`;
-  }
-
-  document.getElementById("A").textContent = out;
-}
-
 render();
+
+setInterval(()=>{
+  const best = MEGA_INDEX.start();
+  document.getElementById("A_MOVE").textContent =
+    "Letzter Move: " + best.id;
+}, 3000);
 </script>
-</body>
-</html>
