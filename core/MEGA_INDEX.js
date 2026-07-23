@@ -34,25 +34,28 @@ class MEGA_INDEX {
         return best;
     }
 
-    // Move‑Animation
+    // 12ALL‑Integration
+    sendTo12ALL(best){
+        if(window.ALL12){
+            ALL12.receive(best);
+        }
+    }
+
+    // 3D‑Move‑Animation
     animateMove(best){
         const out = document.getElementById("move_anim");
         if(!out) return;
 
-        out.innerHTML = "";
-        const div = document.createElement("div");
-
-        div.style.width = "200px";
-        div.style.height = "200px";
-        div.style.border = "3px solid #0f0";
-        div.style.animation = "pulse 1s infinite";
-        div.style.textAlign = "center";
-        div.style.paddingTop = "80px";
-        div.style.fontSize = "20px";
-
-        div.innerText = best.id;
-
-        out.appendChild(div);
+        out.innerHTML = `
+            <div class="cube">
+                <div class="face front">${best.id}</div>
+                <div class="face back">${best.id}</div>
+                <div class="face left">${best.id}</div>
+                <div class="face right">${best.id}</div>
+                <div class="face top">${best.id}</div>
+                <div class="face bottom">${best.id}</div>
+            </div>
+        `;
     }
 
     // Move‑History anzeigen
@@ -72,6 +75,7 @@ class MEGA_INDEX {
         const best = this.computeMove();
         this.animateMove(best);
         this.renderHistory();
+        this.sendTo12ALL(best);
         return best;
     }
 }
