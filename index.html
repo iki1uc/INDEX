@@ -6,13 +6,43 @@
 
 <style>
 body { background:#000; color:#0f0; font-family:monospace; padding:40px; }
-.karo { position:absolute; width:28px; height:28px; border:1px solid #333; font-size:8px; }
+.karo { position:absolute; width:28px; height:28px; border:1px solid #333; font-size:8px; transform:scale(4); transform-origin:top left; }
 .cell { position:absolute; background:#111; padding:5px; border:1px solid #333; }
 .small { width:25px; height:25px; text-align:center; }
 #vector27 { position:relative; height:1200px; }
 #vector81 { position:relative; width:300px; height:300px; margin-top:40px; }
 #index_karo { position:relative; width:600px; height:600px; }
 #all_monitor { white-space:pre; margin-top:40px; }
+
+.cube {
+  width: 120px;
+  height: 120px;
+  position: relative;
+  margin: 40px;
+  transform-style: preserve-3d;
+  animation: spin 3s infinite linear;
+}
+.face {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background: #0f0;
+  border: 2px solid #333;
+  font-size: 20px;
+  text-align: center;
+  padding-top: 40px;
+}
+.front  { transform: translateZ(60px); }
+.back   { transform: rotateY(180deg) translateZ(60px); }
+.left   { transform: rotateY(-90deg) translateZ(60px); }
+.right  { transform: rotateY(90deg) translateZ(60px); }
+.top    { transform: rotateX(90deg) translateZ(60px); }
+.bottom { transform: rotateX(-90deg) translateZ(60px); }
+
+@keyframes spin {
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(360deg); }
+}
 </style>
 
 <script src="core/GAM.core.js"></script>
@@ -28,6 +58,7 @@ body { background:#000; color:#0f0; font-family:monospace; padding:40px; }
 <script src="core/INDEX.respo.js"></script>
 <script src="core/INDEX.render.js"></script>
 <script src="core/ALL.monitor.js"></script>
+<script src="core/MEGA_INDEX.js"></script>
 <script src="core/RUN8.js"></script>
 <script src="ALL.core.js"></script>
 
@@ -40,10 +71,13 @@ body { background:#000; color:#0f0; font-family:monospace; padding:40px; }
 <div id="index_karo"></div>
 <div id="vector27"></div>
 <div id="vector81"></div>
+<div id="move_anim"></div>
+<pre id="move_history"></pre>
 <pre id="all_monitor"></pre>
 
 <script>
 ALL.autoSwitch();
+MEGA_INDEX.start();
 </script>
 
 </body>
