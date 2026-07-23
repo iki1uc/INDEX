@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>INDEX MASTER · ALL · VECTOR · RUN8 · MEGA · 12ALL · ASCII‑FUSION</title>
+<title>INDEX MASTER · ALL · VECTOR · RUN8 · MEGA · 12ALL</title>
 
 <style>
 body { background:#000; color:#0f0; font-family:monospace; padding:40px; }
@@ -19,7 +19,7 @@ h1 { color:#6cf; text-align:center; }
 pre { white-space:pre; font-size:15px; line-height:17px; }
 </style>
 
-<!-- INDEX A MODULES -->
+<!-- ALL indexA modules -->
 <script src="core/GAM.core.js"></script>
 <script src="core/VECTOR.core.js"></script>
 <script src="core/VECTOR.respo.js"></script>
@@ -35,6 +35,7 @@ pre { white-space:pre; font-size:15px; line-height:17px; }
 <script src="core/ALL.monitor.js"></script>
 <script src="ALL.core.js"></script>
 
+<!-- ALL indexB modules -->
 <script src="core/MEGA_INDEX.js"></script>
 <script src="core/12ALL.master.js"></script>
 <script src="core/RUN8.js"></script>
@@ -57,7 +58,7 @@ pre { white-space:pre; font-size:15px; line-height:17px; }
 let history = [];
 let frame = 0;
 
-// ASCII GEO 3D (from indexA)
+// GEO‑3D ASCII animation (indexA)
 function geoAnim(){
     frame++;
     const d = ["●","○","·","∙","•"];
@@ -84,7 +85,7 @@ ${raster}
 `;
 }
 
-// ASCII GEO WARP (from indexB)
+// GEO‑WARP ASCII animation (indexB)
 function geoWarp(){
     const wave = "~".repeat((frame%10)+5);
     const tunnel = "●".repeat((frame%6)+3);
@@ -106,11 +107,11 @@ ${"● ".repeat((frame%5)+2)}
 setInterval(()=>{
     frame++;
 
-    // A-Fusion (RUN8)
+    // A‑Fusion (RUN8)
     const fusionA = RUN8.start();
     history.push(fusionA.index[0].id);
 
-    // B-Fusion (MEGA + 12ALL)
+    // B‑Fusion (MEGA + 12ALL)
     const fusionB = MEGA_INDEX.start();
 
     document.getElementById("fusion_A").textContent =
