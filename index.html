@@ -2,82 +2,63 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>INDEX · ALL · VECTOR · γ∞</title>
+<title>INDEX · ALL · VECTOR · γ∞ · 3‑System‑Fusion</title>
 
 <style>
 body { background:#000; color:#0f0; font-family:monospace; padding:40px; }
-.karo { position:absolute; width:28px; height:28px; border:1px solid #333; font-size:8px; transform:scale(4); transform-origin:top left; }
-.cell { position:absolute; background:#111; padding:5px; border:1px solid #333; }
-.small { width:25px; height:25px; text-align:center; }
-#vector27 { position:relative; height:1200px; }
-#vector81 { position:relative; width:300px; height:300px; margin-top:40px; }
-#index_karo { position:relative; width:600px; height:600px; }
-#all_monitor { white-space:pre; margin-top:40px; }
+h1 { color:#6cf; text-align:center; }
 
-.cube {
-  width: 120px;
-  height: 120px;
-  position: relative;
-  margin: 40px;
-  transform-style: preserve-3d;
-  animation: spin 3s infinite linear;
+.box {
+    background:#111;
+    padding:20px;
+    margin:20px 0;
+    border-left:3px solid #6cf;
+    overflow-x:auto;
 }
-.face {
-  position: absolute;
-  width: 120px;
-  height: 120px;
-  background: #0f0;
-  border: 2px solid #333;
-  font-size: 20px;
-  text-align: center;
-  padding-top: 40px;
-}
-.front  { transform: translateZ(60px); }
-.back   { transform: rotateY(180deg) translateZ(60px); }
-.left   { transform: rotateY(-90deg) translateZ(60px); }
-.right  { transform: rotateY(90deg) translateZ(60px); }
-.top    { transform: rotateX(90deg) translateZ(60px); }
-.bottom { transform: rotateX(-90deg) translateZ(60px); }
 
-@keyframes spin {
-  from { transform: rotateY(0deg); }
-  to   { transform: rotateY(360deg); }
-}
+#move_history { white-space:pre; }
 </style>
 
 <script src="core/GAM.core.js"></script>
 <script src="core/VECTOR.core.js"></script>
-<script src="core/VECTOR.score.js"></script>
-<script src="core/VECTOR.raum.js"></script>
-<script src="core/VECTOR.markt.js"></script>
-<script src="core/VECTOR.cubemind.js"></script>
 <script src="core/VECTOR.respo.js"></script>
 <script src="core/VECTOR.render.js"></script>
 <script src="core/VECTOR.81.js"></script>
 <script src="core/VECTOR.optimizer.js"></script>
+
 <script src="core/INDEX.respo.js"></script>
+<script src="core/INDEX.portal.js"></script>
+<script src="core/INDEX.hyperraum.js"></script>
 <script src="core/INDEX.render.js"></script>
+
 <script src="core/ALL.monitor.js"></script>
-<script src="core/MEGA_INDEX.js"></script>
-<script src="core/RUN8.js"></script>
 <script src="ALL.core.js"></script>
+
+<script src="core/MEGA_INDEX.js"></script>
+<script src="core/12ALL.master.js"></script>
+<script src="core/RUN8.js"></script>
 
 </head>
 
 <body>
 
-<h1>INDEX · ALL · VECTOR · γ∞</h1>
+<h1>INDEX · ALL · VECTOR · γ∞ · 3‑System‑Fusion</h1>
 
-<div id="index_karo"></div>
-<div id="vector27"></div>
-<div id="vector81"></div>
-<div id="move_anim"></div>
+<div id="index_karo" class="box"></div>
+<div id="vector27" class="box"></div>
+<div id="vector81" class="box"></div>
+<div id="all_monitor" class="box"></div>
 <pre id="move_history"></pre>
-<pre id="all_monitor"></pre>
 
 <script>
-ALL.autoSwitch();
-MEGA_INDEX.start();
+let history = [];
+
+setInterval(()=>{
+    const fusion = RUN8.start();
+    history.push(fusion.index[0].id);
+    document.getElementById("move_history").textContent =
+        history.slice(-20).join(" → ");
+}, 2000);
 </script>
 
 </body>
