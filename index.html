@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>INDEX · ALL · VECTOR · γ∞ · 3‑System‑Fusion</title>
+<title>INDEX MASTER · ALL · VECTOR · RUN8 · MEGA · 12ALL · ASCII‑FUSION</title>
 
 <style>
 body { background:#000; color:#0f0; font-family:monospace; padding:40px; }
@@ -16,9 +16,10 @@ h1 { color:#6cf; text-align:center; }
     overflow-x:auto;
 }
 
-#move_history { white-space:pre; }
+pre { white-space:pre; font-size:15px; line-height:17px; }
 </style>
 
+<!-- INDEX A MODULES -->
 <script src="core/GAM.core.js"></script>
 <script src="core/VECTOR.core.js"></script>
 <script src="core/VECTOR.respo.js"></script>
@@ -42,23 +43,88 @@ h1 { color:#6cf; text-align:center; }
 
 <body>
 
-<h1>INDEX · ALL · VECTOR · γ∞ · 3‑System‑Fusion</h1>
+<h1>INDEX MASTER · ALL · VECTOR · RUN8 · MEGA · 12ALL</h1>
 
-<div id="index_karo" class="box"></div>
-<div id="vector27" class="box"></div>
-<div id="vector81" class="box"></div>
-<div id="all_monitor" class="box"></div>
+<div id="fusion_A" class="box"></div>
+<div id="fusion_B" class="box"></div>
+
+<div id="geo_anim" class="box"></div>
+<div id="geo_warp" class="box"></div>
+
 <pre id="move_history"></pre>
 
 <script>
 let history = [];
+let frame = 0;
+
+// ASCII GEO 3D (from indexA)
+function geoAnim(){
+    frame++;
+    const d = ["●","○","·","∙","•"];
+    const p = (i)=> d[(frame+i)%d.length];
+    const glow = frame%2 ? "✦" : "✧";
+    const raster = frame%3 ? "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓" : "██████████████████";
+
+    return `
+GEO‑3D‑ASCII (frame ${frame})
+
+X‑Axis ─── ${p(1)} ${p(2)} ${p(3)}
+Y‑Axis ─── ${p(2)} ${p(3)} ${p(4)}
+Z‑Axis ─── ${p(3)} ${p(4)} ${p(5)}
+
+ROTATION:
+${" ".repeat(frame%12)}↻
+
+ANIME‑GLOW:
+${glow} ${glow} ${glow} ${glow}
+
+AMIGA‑RASTER:
+${raster}
+${raster}
+`;
+}
+
+// ASCII GEO WARP (from indexB)
+function geoWarp(){
+    const wave = "~".repeat((frame%10)+5);
+    const tunnel = "●".repeat((frame%6)+3);
+
+    return `
+GEO‑WARP‑TUNNEL (frame ${frame})
+
+Depth:
+${tunnel}
+
+Warp:
+${wave}
+
+Pulse:
+${"● ".repeat((frame%5)+2)}
+`;
+}
 
 setInterval(()=>{
-    const fusion = RUN8.start();
-    history.push(fusion.index[0].id);
+    frame++;
+
+    // A-Fusion (RUN8)
+    const fusionA = RUN8.start();
+    history.push(fusionA.index[0].id);
+
+    // B-Fusion (MEGA + 12ALL)
+    const fusionB = MEGA_INDEX.start();
+
+    document.getElementById("fusion_A").textContent =
+        JSON.stringify(fusionA, null, 2);
+
+    document.getElementById("fusion_B").textContent =
+        JSON.stringify(fusionB, null, 2);
+
+    document.getElementById("geo_anim").textContent = geoAnim();
+    document.getElementById("geo_warp").textContent = geoWarp();
+
     document.getElementById("move_history").textContent =
         history.slice(-20).join(" → ");
-}, 2000);
+}, 1500);
 </script>
 
 </body>
