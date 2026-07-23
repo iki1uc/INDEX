@@ -1,25 +1,14 @@
 class VECTOR_OPTIMIZER {
 
-    optimize(karo){
-        let best = null;
-        let bestScore = -999;
-
-        karo.forEach(cell=>{
-            const score = cell.score.total;
-            if(score > bestScore){
-                bestScore = score;
-                best = cell;
+    optimize(list){
+        return list.map(c => ({
+            ...c,
+            vector: {
+                qi: (c.id * 3) % 9,
+                iqq: (c.id * 5) % 9,
+                octa: (c.id * 7) % 9
             }
-        });
-
-        ALL.lastMove = best.id;
-        ALL.lastScore = bestScore;
-        ALL.lastRaum = best.raum.type;
-        ALL.lastMarkt = best.markt.boerse;
-
-        ALL_MONITOR.update();
-
-        return best;
+        }));
     }
 }
 
