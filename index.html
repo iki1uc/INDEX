@@ -2,130 +2,74 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>INDEX MASTER · ALL · VECTOR · RUN8 · MEGA · 12ALL</title>
+<title>ASCII · GEO · AMIGA · SHOW</title>
 
 <style>
 body { background:#000; color:#0f0; font-family:monospace; padding:40px; }
-h1 { color:#6cf; text-align:center; }
-
-.box {
-    background:#111;
-    padding:20px;
-    margin:20px 0;
-    border-left:3px solid #6cf;
-    overflow-x:auto;
-}
-
-pre { white-space:pre; font-size:15px; line-height:17px; }
+pre { white-space:pre; font-size:16px; line-height:18px; }
+.box { background:#111; padding:20px; margin:20px 0; border-left:3px solid #6cf; }
 </style>
-
-<!-- ALL indexA modules -->
-<script src="core/GAM.core.js"></script>
-<script src="core/VECTOR.core.js"></script>
-<script src="core/VECTOR.respo.js"></script>
-<script src="core/VECTOR.render.js"></script>
-<script src="core/VECTOR.81.js"></script>
-<script src="core/VECTOR.optimizer.js"></script>
-
-<script src="core/INDEX.respo.js"></script>
-<script src="core/INDEX.portal.js"></script>
-<script src="core/INDEX.hyperraum.js"></script>
-<script src="core/INDEX.render.js"></script>
-
-<script src="core/ALL.monitor.js"></script>
-<script src="ALL.core.js"></script>
-
-<!-- ALL indexB modules -->
-<script src="core/MEGA_INDEX.js"></script>
-<script src="core/12ALL.master.js"></script>
-<script src="core/RUN8.js"></script>
 
 </head>
 
 <body>
 
-<h1>INDEX MASTER · ALL · VECTOR · RUN8 · MEGA · 12ALL</h1>
+<h1>ASCII · GEO · AMIGA · SHOW</h1>
 
-<div id="fusion_A" class="box"></div>
-<div id="fusion_B" class="box"></div>
-
-<div id="geo_anim" class="box"></div>
-<div id="geo_warp" class="box"></div>
-
-<pre id="move_history"></pre>
+<div class="box"><pre id="geo3d"></pre></div>
+<div class="box"><pre id="amiga"></pre></div>
+<div class="box"><pre id="warp"></pre></div>
+<div class="box"><pre id="gta"></pre></div>
 
 <script>
-let history = [];
-let frame = 0;
+let f = 0;
 
-// GEO‑3D ASCII animation (indexA)
-function geoAnim(){
-    frame++;
+function geo3D(){
     const d = ["●","○","·","∙","•"];
-    const p = (i)=> d[(frame+i)%d.length];
-    const glow = frame%2 ? "✦" : "✧";
-    const raster = frame%3 ? "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓" : "██████████████████";
-
+    const p = (i)=> d[(f+i)%d.length];
     return `
-GEO‑3D‑ASCII (frame ${frame})
-
-X‑Axis ─── ${p(1)} ${p(2)} ${p(3)}
-Y‑Axis ─── ${p(2)} ${p(3)} ${p(4)}
-Z‑Axis ─── ${p(3)} ${p(4)} ${p(5)}
-
-ROTATION:
-${" ".repeat(frame%12)}↻
-
-ANIME‑GLOW:
-${glow} ${glow} ${glow} ${glow}
-
-AMIGA‑RASTER:
-${raster}
-${raster}
+GEO‑3D (frame ${f})
+X ─── ${p(1)} ${p(2)} ${p(3)}
+Y ─── ${p(2)} ${p(3)} ${p(4)}
+Z ─── ${p(3)} ${p(4)} ${p(5)}
+ROTATION: ${" ".repeat(f%10)}↻
 `;
 }
 
-// GEO‑WARP ASCII animation (indexB)
-function geoWarp(){
-    const wave = "~".repeat((frame%10)+5);
-    const tunnel = "●".repeat((frame%6)+3);
-
+function amigaScene(){
+    const bar = f%2 ? "██████████████████" : "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓";
     return `
-GEO‑WARP‑TUNNEL (frame ${frame})
+AMIGA‑SCENE
+${bar}
+${bar}
+${bar}
+`;
+}
 
-Depth:
-${tunnel}
+function warpTunnel(){
+    return `
+WARP‑TUNNEL
+Depth: ${"●".repeat((f%6)+3)}
+Warp : ${"~".repeat((f%10)+5)}
+`;
+}
 
-Warp:
-${wave}
-
-Pulse:
-${"● ".repeat((frame%5)+2)}
+function gta6(){
+    return `
+GTA‑6‑ASCII‑LIVE
+${f%2 ? "🚗──🏙──🔥" : "🔥──🚓──🏙"}
 `;
 }
 
 setInterval(()=>{
-    frame++;
+    f++;
 
-    // A‑Fusion (RUN8)
-    const fusionA = RUN8.start();
-    history.push(fusionA.index[0].id);
+    document.getElementById("geo3d").textContent = geo3D();
+    document.getElementById("amiga").textContent = amigaScene();
+    document.getElementById("warp").textContent = warpTunnel();
+    document.getElementById("gta").textContent = gta6();
 
-    // B‑Fusion (MEGA + 12ALL)
-    const fusionB = MEGA_INDEX.start();
-
-    document.getElementById("fusion_A").textContent =
-        JSON.stringify(fusionA, null, 2);
-
-    document.getElementById("fusion_B").textContent =
-        JSON.stringify(fusionB, null, 2);
-
-    document.getElementById("geo_anim").textContent = geoAnim();
-    document.getElementById("geo_warp").textContent = geoWarp();
-
-    document.getElementById("move_history").textContent =
-        history.slice(-20).join(" → ");
-}, 1500);
+}, 150);
 </script>
 
 </body>
