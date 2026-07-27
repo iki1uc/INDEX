@@ -1,3 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>RESPO – SHOW A LA CARTE + 360° Dashboard</title>
+
+<style>
+body { background:#000; color:#0f0; font-family:monospace; }
+
+/* Status-Karo */
 #statusKaro {
     width: 20px;
     height: 20px;
@@ -6,19 +16,58 @@
     display: inline-block;
     margin-bottom: 10px;
 }
-<h1>RESPO – 360° Dashboard</h1>
 
-<div id="statusKaro"></div>
-<pre id="statusText"></pre>
+/* Move Animation */
+#move_anim .cube {
+    width:80px; height:80px;
+    position:relative;
+    transform-style:preserve-3d;
+    animation:spin 3s infinite linear;
+}
+.face {
+    position:absolute; width:80px; height:80px;
+    background:#0f0; color:#000;
+    display:flex; align-items:center; justify-content:center;
+    font-size:30px;
+}
+@keyframes spin {
+    from{transform:rotateY(0deg);}
+    to{transform:rotateY(360deg);}
+}
 
-<h2>RESPO 410</h2>
-<pre id="respo410"></pre>
+/* 9×9 Raum */
+.roomCell {
+    position:absolute;
+    width:30px; height:30px;
+    background:#111;
+    border:1px solid #0f0;
+    text-align:center;
+    line-height:30px;
+}
 
-<h2>TMP Status</h2>
-<pre id="tmpStatus"></pre>
+/* Zoom */
+.zoomCell {
+    position:absolute;
+    background:#222;
+    color:#0f0;
+    padding:5px;
+    border:1px solid #0f0;
+}
+</style>
 
-<h2>360° Axe</h2>
-<pre id="axe360"></pre>
+<!-- Module laden -->
+<script type="module" src="./core/RESPO_LIST.js"></script>
+<script type="module" src="./core/INDEX_RESPO.js"></script>
+<script type="module" src="./core/INDEX.respo.js"></script>
+<script type="module" src="./core/MEGA_INDEX.js"></script>
+<script type="module" src="./core/INDEX.portal.js"></script>
+<script type="module" src="./core/MEGA_INDEX.zoom.js"></script>
+<script type="module" src="./core/12ALL.master.js"></script>
+<script type="module" src="./core/INDEX.hyperraum.js"></script>
+
+<script type="module">
+
+/* Status-Karo Logik */
 function updateStatus(respoCount){
     const box = document.getElementById("statusKaro");
     const txt = document.getElementById("statusText");
@@ -36,89 +85,85 @@ function updateStatus(respoCount){
         txt.innerText = "OFFLINE – keine RESPO geladen";
     }
 }
-export const RESPO_LIST = {
 
-    build(){
-        const list = [];
+/* RESPO 410 + TMP + 360° Axe laden */
+import { RESPO_INDEX } from "./core/INDEX.respo.js";
 
-        for(let i=0; i<410; i++){
-            list.push({
-                id: i,
-                tmp: "TMP-" + Math.floor(Math.random()*9999),
+await RESPO_INDEX.init();
 
-                axe: {
-                    d: i % 9,
-                    hdf: Math.floor(i / 9),
-                    o: (i * 7) % 360,
-                    u: (i * 13) % 360,
-                    gamma: GAM.gamma(),
-                    qi: VECTOR.qi(i % 9, Math.floor(i / 9)),
-                    iqq: VECTOR.iqq(i % 9, Math.floor(i / 9))
-                }
-            });
-        }
+/* Status */
+updateStatus(RESPO_INDEX.ALL.length);
 
-        return list;
-    }
-};
+/* RESPO 410 */
+document.getElementById("respo410").innerText =
+    JSON.stringify(RESPO_INDEX.ALL, null, 2);
 
-window.RESPO_LIST = RESPO_LIST;
-import { RESPO_LIST } from "./RESPO_LIST.js";
+/* TMP Status */
+document.getElementById("tmpStatus").innerText =
+    JSON.stringify(RESPO_INDEX.ALL.slice(0,20), null, 2);
 
-export const RESPO_INDEX = {
+/* 360° Axe */
+document.getElementById("axe360").innerText =
+    JSON.stringify(RESPO_INDEX.ALL.map(x => x.axe).slice(0,20), null, 2);
 
-    ALL: [],
-    ORG: {},
-    LOL: {},
-    PIPE: [],
+/* Hyperraum starten */
+const hyper = INDEX_HYPERRAUM.start();
 
-    async init(){
-        this.ALL = RESPO_LIST.build();
+document.getElementById("base").innerText =
+    JSON.stringify(hyper.base.slice(0,20), null, 2);
 
-        this.ORG = {
-            active: this.ALL.filter(x => x),
-            tmpSorted: this.ALL.sort((a,b)=>a.tmp.localeCompare(b.tmp))
-        };
+document.getElementById("portal").innerText =
+    JSON.stringify(hyper.portal.slice(0,20), null, 2);
 
-        this.LOL = {
-            random: this.ALL[Math.floor(Math.random()*410)],
-            last10: this.ALL.slice(-10)
-        };
+document.getElementById("zoom").innerText =
+    JSON.stringify(hyper.zoom.slice(0,5), null, 2);
 
-        this.PIPE = this.ALL.map(x => x.id);
-    }
-};
+document.getElementById("best").innerText =
+    JSON.stringify(hyper.best, null, 2);
 
-window.RESPO_INDEX = RESPO_INDEX;
-<script type="module">
-    import { RESPO_INDEX } from "./core/INDEX.respo.js";
-
-    await RESPO_INDEX.init();
-
-    updateStatus(RESPO_INDEX.ALL.length);
-
-    document.getElementById("respo410").innerText =
-        JSON.stringify(RESPO_INDEX.ALL, null, 2);
-
-    document.getElementById("tmpStatus").innerText =
-        JSON.stringify(RESPO_INDEX.ALL.slice(0,20), null, 2);
-
-    document.getElementById("axe360").innerText =
-        JSON.stringify(RESPO_INDEX.ALL.map(x => x.axe).slice(0,20), null, 2);
-
-    // Hyperraum bleibt wie er ist
-    const hyper = INDEX_HYPERRAUM.start();
-
-    document.getElementById("base").innerText =
-        JSON.stringify(hyper.base.slice(0,20), null, 2);
-
-    document.getElementById("portal").innerText =
-        JSON.stringify(hyper.portal.slice(0,20), null, 2);
-
-    document.getElementById("zoom").innerText =
-        JSON.stringify(hyper.zoom.slice(0,5), null, 2);
-
-    document.getElementById("best").innerText =
-        JSON.stringify(hyper.best, null, 2);
 </script>
-visio.video
+
+</head>
+<body>
+
+<h1>RESPO – 360° Dashboard</h1>
+
+<div id="statusKaro"></div>
+<pre id="statusText"></pre>
+
+<h2>RESPO 410</h2>
+<pre id="respo410"></pre>
+
+<h2>TMP Status</h2>
+<pre id="tmpStatus"></pre>
+
+<h2>360° Axe</h2>
+<pre id="axe360"></pre>
+
+<hr>
+
+<h1>RESPO – SHOW A LA CARTE</h1>
+
+<h2>Move Animation</h2>
+<div id="move_anim"></div>
+
+<h2>Move History</h2>
+<pre id="move_history"></pre>
+
+<h2>Hyperraum Base (20)</h2>
+<pre id="base"></pre>
+
+<h2>Portal Layer (20)</h2>
+<pre id="portal"></pre>
+
+<h2>Zoom Layer (5)</h2>
+<pre id="zoom"></pre>
+
+<h2>Best Move</h2>
+<pre id="best"></pre>
+
+<h2>Raum 9×9</h2>
+<div id="room9x9" style="position:relative; width:270px; height:270px;"></div>
+
+</body>
+</html>
