@@ -1,76 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>ASCII · GEO · AMIGA · SHOW</title>
+    <meta charset="UTF-8">
+    <title>RESPO – Master Index</title>
 
-<style>
-body { background:#000; color:#0f0; font-family:monospace; padding:40px; }
-pre { white-space:pre; font-size:16px; line-height:18px; }
-.box { background:#111; padding:20px; margin:20px 0; border-left:3px solid #6cf; }
-</style>
+    <style>
+        body { font-family: monospace; background:#111; color:#0f0; padding:20px; }
+        pre { background:#000; padding:20px; border:1px solid #0f0; }
+        h1, h2 { color:#0f0; }
+    </style>
 
+    <script type="module">
+        import { RESPO_INDEX } from "./core/INDEX.respo.js";
+
+        // 1. Ausgabe aller Systeme
+        document.addEventListener("DOMContentLoaded", () => {
+
+            document.getElementById("all").innerText =
+                JSON.stringify(RESPO_INDEX.ALL, null, 2);
+
+            document.getElementById("org").innerText =
+                JSON.stringify(RESPO_INDEX.ORG, null, 2);
+
+            document.getElementById("lol").innerText =
+                JSON.stringify(RESPO_INDEX.LOL, null, 2);
+
+            document.getElementById("pipe").innerText =
+                JSON.stringify(RESPO_INDEX.PIPE, null, 2);
+        });
+    </script>
 </head>
 
 <body>
+    <h1>RESPO – Master Index</h1>
 
-<h1>ASCII · GEO · AMIGA · SHOW</h1>
+    <h2>RESPO ALL</h2>
+    <pre id="all"></pre>
 
-<div class="box"><pre id="geo3d"></pre></div>
-<div class="box"><pre id="amiga"></pre></div>
-<div class="box"><pre id="warp"></pre></div>
-<div class="box"><pre id="gta"></pre></div>
+    <h2>RESPO ORG</h2>
+    <pre id="org"></pre>
 
-<script>
-let f = 0;
+    <h2>RESPO LOL (Debug)</h2>
+    <pre id="lol"></pre>
 
-function geo3D(){
-    const d = ["●","○","·","∙","•"];
-    const p = (i)=> d[(f+i)%d.length];
-    return `
-GEO‑3D (frame ${f})
-X ─── ${p(1)} ${p(2)} ${p(3)}
-Y ─── ${p(2)} ${p(3)} ${p(4)}
-Z ─── ${p(3)} ${p(4)} ${p(5)}
-ROTATION: ${" ".repeat(f%10)}↻
-`;
-}
-
-function amigaScene(){
-    const bar = f%2 ? "██████████████████" : "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓";
-    return `
-AMIGA‑SCENE
-${bar}
-${bar}
-${bar}
-`;
-}
-
-function warpTunnel(){
-    return `
-WARP‑TUNNEL
-Depth: ${"●".repeat((f%6)+3)}
-Warp : ${"~".repeat((f%10)+5)}
-`;
-}
-
-function gta6(){
-    return `
-GTA‑6‑ASCII‑LIVE
-${f%2 ? "🚗──🏙──🔥" : "🔥──🚓──🏙"}
-`;
-}
-
-setInterval(()=>{
-    f++;
-
-    document.getElementById("geo3d").textContent = geo3D();
-    document.getElementById("amiga").textContent = amigaScene();
-    document.getElementById("warp").textContent = warpTunnel();
-    document.getElementById("gta").textContent = gta6();
-
-}, 150);
-</script>
-
+    <h2>RESPO Pipeline</h2>
+    <pre id="pipe"></pre>
 </body>
 </html>
