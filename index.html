@@ -1,284 +1,81 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>RESPO – SHOW A LA CARTE + 360° Dashboard</title>
+export function RUN9(index){
+    return index.map((cell, i)=>{
+        const warp = (i * 7 + cell.axe.qi * 13) % 410;
+        const portal = (i % 4 === 0) ? "A" :
+                       (i % 4 === 1) ? "B" :
+                       (i % 4 === 2) ? "C" : "D";
 
-<style>
-body { background:#000; color:#0f0; font-family:monospace; }
-
-/* Status-Karo */
-#statusKaro {
-    width: 20px;
-    height: 20px;
-    border: 2px solid #0f0;
-    background: #300;
-    display: inline-block;
-    margin-bottom: 10px;
-}
-
-/* Move Animation */
-#move_anim .cube {
-    width:80px; height:80px;
-    position:relative;
-    transform-style:preserve-3d;
-    animation:spin 3s infinite linear;
-}
-.face {
-    position:absolute; width:80px; height:80px;
-    background:#0f0; color:#000;
-    display:flex; align-items:center; justify-content:center;
-    font-size:30px;
-}
-@keyframes spin {
-    from{transform:rotateY(0deg);}
-    to{transform:rotateY(360deg);}
-}
-
-/* 9×9 Raum */
-.roomCell {
-    position:absolute;
-    width:30px; height:30px;
-    background:#111;
-    border:1px solid #0f0;
-    text-align:center;
-    line-height:30px;
-}
-
-/* Zoom */
-.zoomCell {
-    position:absolute;
-    background:#222;
-    color:#0f0;
-    padding:5px;
-    border:1px solid #0f0;
-}
-</style>
-
-<!-- Module laden -->
-<script type="module" src="./core/RESPO_LIST.js"></script>
-<script type="module" src="./core/INDEX_RESPO.js"></script>
-<script type="module" src="./core/INDEX.respo.js"></script>
-<script type="module" src="./core/MEGA_INDEX.js"></script>
-<script type="module" src="./core/INDEX.portal.js"></script>
-<script type="module" src="./core/MEGA_INDEX.zoom.js"></script>
-<script type="module" src="./core/12ALL.master.js"></script>
-<script type="module" src="./core/INDEX.hyperraum.js"></script>
-
-<script type="module">
-
-/* Status-Karo Logik */
-function updateStatus(respoCount){
-    const box = document.getElementById("statusKaro");
-    const txt = document.getElementById("statusText");
-
-    if(respoCount === 410){
-        box.style.background = "#0f0"; // Grün
-        txt.innerText = "ONLINE – 410 RESPO geladen";
-    }
-    else if(respoCount > 0){
-        box.style.background = "#ff0"; // Gelb
-        txt.innerText = "WARNUNG – nur " + respoCount + " RESPO geladen";
-    }
-    else {
-        box.style.background = "#f00"; // Rot
-        txt.innerText = "OFFLINE – keine RESPO geladen";
-    }
-}
-
-/* Matrix-Funktionen */
-function buildMatrix81(list){
-    const m = [];
-    for(let r=0; r<9; r++){
-        const row = [];
-        for(let c=0; c<9; c++){
-            const index = r*9 + c;
-            row.push(index < list.length ? list[index].id + ":" + list[index].tmp : "----");
-        }
-        m.push(row);
-    }
-    return m;
-}
-
-function buildMatrix410(list){
-    const m = [];
-    let row = [];
-    list.forEach((item)=>{
-        row.push(item.id + ":" + item.tmp);
-        if(row.length === 10){
-            m.push(row);
-            row = [];
-        }
+        return {
+            ...cell,
+            portal,
+            warp,
+            jump: warp % 81
+        };
     });
-    if(row.length > 0) m.push(row);
-    return m;
 }
+export function RUN12(index){
+    const clusters = {};
 
-function buildMatrixQi(list){
-    const m = [];
-    for(let r=0; r<9; r++){
-        const row = [];
-        for(let c=0; c<9; c++){
-            const index = r*9 + c;
-            row.push(index < list.length ? list[index].axe.qi : "----");
-        }
-        m.push(row);
-    }
-    return m;
-}
-
-function buildMatrixIqq(list){
-    const m = [];
-    for(let r=0; r<9; r++){
-        const row = [];
-        for(let c=0; c<9; c++){
-            const index = r*9 + c;
-            row.push(index < list.length ? list[index].axe.iqq : "----");
-        }
-        m.push(row);
-    }
-    return m;
-}
-
-function buildMatrixGamma(list){
-    const m = [];
-    for(let r=0; r<9; r++){
-        const row = [];
-        for(let c=0; c<9; c++){
-            const index = r*9 + c;
-            row.push(index < list.length ? list[index].axe.gamma.toFixed(3) : "----");
-        }
-        m.push(row);
-    }
-    return m;
-}
-
-function buildMatrix128(list){
-    const m = [];
-    let row = [];
-    list.slice(0,128).forEach((item)=>{
-        row.push(item.id + ":" + item.tmp);
-        if(row.length === 8){
-            m.push(row);
-            row = [];
-        }
+    index.forEach(cell=>{
+        const key = Math.floor(cell.axe.gamma * 10);
+        if(!clusters[key]) clusters[key] = [];
+        clusters[key].push(cell);
     });
-    if(row.length > 0) m.push(row);
-    return m;
+
+    return clusters;
 }
+export function RUN128(index){
+    return index.slice(0,128).map((cell,i)=>({
+        ...cell,
+        vec128: {
+            pos: i,
+            flow: (cell.axe.qi + cell.axe.iqq) / 2,
+            style: cell.tmp % 7
+        }
+    }));
+}
+export async function RUN360(){
+    const base = await RUN8();
+    const portal = RUN9(base.index);
+    const cluster = RUN12(base.index);
+    const vec128 = RUN128(base.index);
 
-/* RESPO laden */
-import { RESPO_INDEX } from "./core/INDEX.respo.js";
+    return {
+        ...base,
+        portal,
+        cluster,
+        vec128
+    };
+}
+export function ECO(cell){
+    const eco = (cell.depth + cell.breite + cell.hoehe) / 3;
+    return eco.toFixed(3);
+}
+export function ANIME_STYLE(cell){
+    const style = cell.tmp % 7;
 
-await RESPO_INDEX.init();
+    return [
+        "calm",
+        "sharp",
+        "flow",
+        "pulse",
+        "echo",
+        "flare",
+        "nova"
+    ][style];
+}
+export function IDENTITY(cell){
+    return {
+        arc: cell.depth > 50 ? "ascend" : "base",
+        role: cell.tmp % 5,
+        mood: cell.axe.gamma > 0.7 ? "bright" : "shadow"
+    };
+}
+import { RUN360 } from "./core/RUN360.js";
 
-/* Status */
-updateStatus(RESPO_INDEX.ALL.length);
+const full = await RUN360();
 
-/* Dashboard-Ausgaben */
-document.getElementById("respo410").innerText =
-    JSON.stringify(RESPO_INDEX.ALL, null, 2);
-
-document.getElementById("tmpStatus").innerText =
-    JSON.stringify(RESPO_INDEX.ALL.slice(0,20), null, 2);
-
-document.getElementById("axe360").innerText =
-    JSON.stringify(RESPO_INDEX.ALL.map(x => x.axe).slice(0,20), null, 2);
-
-document.getElementById("matrix81").innerText =
-    JSON.stringify(buildMatrix81(RESPO_INDEX.ALL), null, 2);
-
-document.getElementById("matrix410").innerText =
-    JSON.stringify(buildMatrix410(RESPO_INDEX.ALL), null, 2);
-
-document.getElementById("matrixQi").innerText =
-    JSON.stringify(buildMatrixQi(RESPO_INDEX.ALL), null, 2);
-
-document.getElementById("matrixIqq").innerText =
-    JSON.stringify(buildMatrixIqq(RESPO_INDEX.ALL), null, 2);
-
-document.getElementById("matrixGamma").innerText =
-    JSON.stringify(buildMatrixGamma(RESPO_INDEX.ALL), null, 2);
-
-document.getElementById("matrix128").innerText =
-    JSON.stringify(buildMatrix128(RESPO_INDEX.ALL), null, 2);
-
-/* Hyperraum starten */
-const hyper = INDEX_HYPERRAUM.start();
-
-document.getElementById("base").innerText =
-    JSON.stringify(hyper.base.slice(0,20), null, 2);
-
-document.getElementById("portal").innerText =
-    JSON.stringify(hyper.portal.slice(0,20), null, 2);
-
-document.getElementById("zoom").innerText =
-    JSON.stringify(hyper.zoom.slice(0,5), null, 2);
-
-document.getElementById("best").innerText =
-    JSON.stringify(hyper.best, null, 2);
-
-</script>
-
-</head>
-<body>
-
-<h1>RESPO – 360° Dashboard</h1>
-
-<div id="statusKaro"></div>
-<pre id="statusText"></pre>
-
-<h2>RESPO 410</h2>
-<pre id="respo410"></pre>
-
-<h2>TMP Status</h2>
-<pre id="tmpStatus"></pre>
-
-<h2>360° Axe</h2>
-<pre id="axe360"></pre>
-
-<h2>Matrix 81 (9×9)</h2>
-<pre id="matrix81"></pre>
-
-<h2>Matrix 410</h2>
-<pre id="matrix410"></pre>
-
-<h2>Matrix Qi (9×9)</h2>
-<pre id="matrixQi"></pre>
-
-<h2>Matrix IQQ (9×9)</h2>
-<pre id="matrixIqq"></pre>
-
-<h2>Matrix Gamma (9×9)</h2>
-<pre id="matrixGamma"></pre>
-
-<h2>Matrix 128 (VEC128)</h2>
-<pre id="matrix128"></pre>
-
-<hr>
-
-<h1>RESPO – SHOW A LA CARTE</h1>
-
-<h2>Move Animation</h2>
-<div id="move_anim"></div>
-
-<h2>Move History</h2>
-<pre id="move_history"></pre>
-
-<h2>Hyperraum Base (20)</h2>
-<pre id="base"></pre>
-
-<h2>Portal Layer (20)</h2>
-<pre id="portal"></pre>
-
-<h2>Zoom Layer (5)</h2>
-<pre id="zoom"></pre>
-
-<h2>Best Move</h2>
-<pre id="best"></pre>
-
-<h2>Raum 9×9</h2>
-<div id="room9x9" style="position:relative; width:270px; height:270px;"></div>
-
-</body>
-</html>
+document.getElementById("run360").innerText =
+    JSON.stringify(full, null, 2);
+<h2>RUN 360 – Full System</h2>
+<pre id="run360"></pre>
