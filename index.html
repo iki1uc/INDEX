@@ -1,49 +1,66 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>RESPO – Master Index</title>
+<meta charset="UTF-8">
+<title>RESPO – SHOW A LA CARTE</title>
 
-    <style>
-        body { font-family: monospace; background:#111; color:#0f0; padding:20px; }
-        pre { background:#000; padding:20px; border:1px solid #0f0; }
-        h1, h2 { color:#0f0; }
-    </style>
+<style>
+body { background:#000; color:#0f0; font-family:monospace; }
+#move_anim .cube { width:80px; height:80px; position:relative; transform-style:preserve-3d; animation:spin 3s infinite linear; }
+.face { position:absolute; width:80px; height:80px; background:#0f0; color:#000; display:flex; align-items:center; justify-content:center; font-size:30px; }
+@keyframes spin { from{transform:rotateY(0deg);} to{transform:rotateY(360deg);} }
+.roomCell { position:absolute; width:30px; height:30px; background:#111; border:1px solid #0f0; text-align:center; }
+.zoomCell { position:absolute; background:#222; color:#0f0; padding:5px; border:1px solid #0f0; }
+</style>
 
-    <script type="module">
-        import { RESPO_INDEX } from "./core/INDEX.respo.js";
+<script type="module" src="./core/INDEX_RESPO.js"></script>
+<script type="module" src="./core/MEGA_INDEX.js"></script>
+<script type="module" src="./core/INDEX.portal.js"></script>
+<script type="module" src="./core/MEGA_INDEX.zoom.js"></script>
+<script type="module" src="./core/12ALL.master.js"></script>
+<script type="module" src="./core/INDEX.hyperraum.js"></script>
 
-        // 1. Ausgabe aller Systeme
-        document.addEventListener("DOMContentLoaded", () => {
+<script type="module">
+    const hyper = INDEX_HYPERRAUM.start();
 
-            document.getElementById("all").innerText =
-                JSON.stringify(RESPO_INDEX.ALL, null, 2);
+    document.getElementById("base").innerText =
+        JSON.stringify(hyper.base.slice(0,20), null, 2);
 
-            document.getElementById("org").innerText =
-                JSON.stringify(RESPO_INDEX.ORG, null, 2);
+    document.getElementById("portal").innerText =
+        JSON.stringify(hyper.portal.slice(0,20), null, 2);
 
-            document.getElementById("lol").innerText =
-                JSON.stringify(RESPO_INDEX.LOL, null, 2);
+    document.getElementById("zoom").innerText =
+        JSON.stringify(hyper.zoom.slice(0,5), null, 2);
 
-            document.getElementById("pipe").innerText =
-                JSON.stringify(RESPO_INDEX.PIPE, null, 2);
-        });
-    </script>
+    document.getElementById("best").innerText =
+        JSON.stringify(hyper.best, null, 2);
+</script>
+
 </head>
-
 <body>
-    <h1>RESPO – Master Index</h1>
 
-    <h2>RESPO ALL</h2>
-    <pre id="all"></pre>
+<h1>RESPO – SHOW A LA CARTE</h1>
 
-    <h2>RESPO ORG</h2>
-    <pre id="org"></pre>
+<h2>Move Animation</h2>
+<div id="move_anim"></div>
 
-    <h2>RESPO LOL (Debug)</h2>
-    <pre id="lol"></pre>
+<h2>Move History</h2>
+<pre id="move_history"></pre>
 
-    <h2>RESPO Pipeline</h2>
-    <pre id="pipe"></pre>
+<h2>Hyperraum Base (20)</h2>
+<pre id="base"></pre>
+
+<h2>Portal Layer (20)</h2>
+<pre id="portal"></pre>
+
+<h2>Zoom Layer (5)</h2>
+<pre id="zoom"></pre>
+
+<h2>Best Move</h2>
+<pre id="best"></pre>
+
+<h2>Raum 9×9</h2>
+<div id="room9x9" style="position:relative; width:270px; height:270px;"></div>
+
 </body>
 </html>
