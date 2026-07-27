@@ -86,7 +86,88 @@ function updateStatus(respoCount){
     }
 }
 
-/* RESPO 410 + TMP + 360° Axe laden */
+/* Matrix-Funktionen */
+function buildMatrix81(list){
+    const m = [];
+    for(let r=0; r<9; r++){
+        const row = [];
+        for(let c=0; c<9; c++){
+            const index = r*9 + c;
+            row.push(index < list.length ? list[index].id + ":" + list[index].tmp : "----");
+        }
+        m.push(row);
+    }
+    return m;
+}
+
+function buildMatrix410(list){
+    const m = [];
+    let row = [];
+    list.forEach((item)=>{
+        row.push(item.id + ":" + item.tmp);
+        if(row.length === 10){
+            m.push(row);
+            row = [];
+        }
+    });
+    if(row.length > 0) m.push(row);
+    return m;
+}
+
+function buildMatrixQi(list){
+    const m = [];
+    for(let r=0; r<9; r++){
+        const row = [];
+        for(let c=0; c<9; c++){
+            const index = r*9 + c;
+            row.push(index < list.length ? list[index].axe.qi : "----");
+        }
+        m.push(row);
+    }
+    return m;
+}
+
+function buildMatrixIqq(list){
+    const m = [];
+    for(let r=0; r<9; r++){
+        const row = [];
+        for(let c=0; c<9; c++){
+            const index = r*9 + c;
+            row.push(index < list.length ? list[index].axe.iqq : "----");
+        }
+        m.push(row);
+    }
+    return m;
+}
+
+function buildMatrixGamma(list){
+    const m = [];
+    for(let r=0; r<9; r++){
+        const row = [];
+        for(let c=0; c<9; c++){
+            const index = r*9 + c;
+            row.push(index < list.length ? list[index].axe.gamma.toFixed(3) : "----");
+        }
+        m.push(row);
+    }
+    return m;
+}
+
+function buildMatrix128(list){
+    const m = [];
+    let row = [];
+    list.slice(0,128).forEach((item)=>{
+        row.push(item.id + ":" + item.tmp);
+        if(row.length === 8){
+            m.push(row);
+            row = [];
+        }
+    });
+    if(row.length > 0) m.push(row);
+    return m;
+}
+
+/* RESPO laden */
 import { RESPO_INDEX } from "./core/INDEX.respo.js";
 
 await RESPO_INDEX.init();
@@ -94,17 +175,33 @@ await RESPO_INDEX.init();
 /* Status */
 updateStatus(RESPO_INDEX.ALL.length);
 
-/* RESPO 410 */
+/* Dashboard-Ausgaben */
 document.getElementById("respo410").innerText =
     JSON.stringify(RESPO_INDEX.ALL, null, 2);
 
-/* TMP Status */
 document.getElementById("tmpStatus").innerText =
     JSON.stringify(RESPO_INDEX.ALL.slice(0,20), null, 2);
 
-/* 360° Axe */
 document.getElementById("axe360").innerText =
     JSON.stringify(RESPO_INDEX.ALL.map(x => x.axe).slice(0,20), null, 2);
+
+document.getElementById("matrix81").innerText =
+    JSON.stringify(buildMatrix81(RESPO_INDEX.ALL), null, 2);
+
+document.getElementById("matrix410").innerText =
+    JSON.stringify(buildMatrix410(RESPO_INDEX.ALL), null, 2);
+
+document.getElementById("matrixQi").innerText =
+    JSON.stringify(buildMatrixQi(RESPO_INDEX.ALL), null, 2);
+
+document.getElementById("matrixIqq").innerText =
+    JSON.stringify(buildMatrixIqq(RESPO_INDEX.ALL), null, 2);
+
+document.getElementById("matrixGamma").innerText =
+    JSON.stringify(buildMatrixGamma(RESPO_INDEX.ALL), null, 2);
+
+document.getElementById("matrix128").innerText =
+    JSON.stringify(buildMatrix128(RESPO_INDEX.ALL), null, 2);
 
 /* Hyperraum starten */
 const hyper = INDEX_HYPERRAUM.start();
@@ -139,6 +236,24 @@ document.getElementById("best").innerText =
 
 <h2>360° Axe</h2>
 <pre id="axe360"></pre>
+
+<h2>Matrix 81 (9×9)</h2>
+<pre id="matrix81"></pre>
+
+<h2>Matrix 410</h2>
+<pre id="matrix410"></pre>
+
+<h2>Matrix Qi (9×9)</h2>
+<pre id="matrixQi"></pre>
+
+<h2>Matrix IQQ (9×9)</h2>
+<pre id="matrixIqq"></pre>
+
+<h2>Matrix Gamma (9×9)</h2>
+<pre id="matrixGamma"></pre>
+
+<h2>Matrix 128 (VEC128)</h2>
+<pre id="matrix128"></pre>
 
 <hr>
 
