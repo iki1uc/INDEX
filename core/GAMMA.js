@@ -1,0 +1,10 @@
+Gamma 0.0–0.1 → Cluster 0 → 12 Elemente
+Gamma 0.1–0.2 → Cluster 1 → 33 Elemente
+Gamma 0.2–0.3 → Cluster 2 → 41 Elemente
+Gamma 0.3–0.4 → Cluster 3 → 55 Elemente
+Gamma 0.4–0.5 → Cluster 4 → 62 Elemente
+Gamma 0.5–0.6 → Cluster 5 → 71 Elemente
+Gamma 0.6–0.7 → Cluster 6 → 49 Elemente
+Gamma 0.7–0.8 → Cluster 7 → 29 Elemente
+Gamma 0.8–0.9 → Cluster 8 → 12 Elemente
+Gamma 0.9–1.0 → Cluster 9 → 6 Elemente
