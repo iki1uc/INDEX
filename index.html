@@ -1,81 +1,140 @@
-export function RUN9(index){
-    return index.map((cell, i)=>{
-        const warp = (i * 7 + cell.axe.qi * 13) % 410;
-        const portal = (i % 4 === 0) ? "A" :
-                       (i % 4 === 1) ? "B" :
-                       (i % 4 === 2) ? "C" : "D";
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>INDEX – 360° LIVE DASHBOARD</title>
 
-        return {
-            ...cell,
-            portal,
-            warp,
-            jump: warp % 81
-        };
-    });
-}
-export function RUN12(index){
-    const clusters = {};
+<style>
+body { background:#000; color:#0f0; font-family:monospace; }
+h2 { color:#0f0; margin-top:30px; }
+pre { border:1px solid #0f0; padding:10px; background:#111; }
+.section { margin-bottom:40px; }
+.bar { font-family:monospace; }
+</style>
 
-    index.forEach(cell=>{
-        const key = Math.floor(cell.axe.gamma * 10);
-        if(!clusters[key]) clusters[key] = [];
-        clusters[key].push(cell);
-    });
+<!-- MODULES -->
+<script type="module" src="./core/RUN360.js"></script>
+<script type="module" src="./core/RUN9.js"></script>
+<script type="module" src="./core/RUN12.js"></script>
+<script type="module" src="./core/RUN128.js"></script>
+<script type="module" src="./core/ECO.js"></script>
+<script type="module" src="./core/BETA.js"></script>
+<script type="module" src="./core/GAMMA.js"></script>
+<script type="module" src="./core/HTML.js"></script>
 
-    return clusters;
-}
-export function RUN128(index){
-    return index.slice(0,128).map((cell,i)=>({
-        ...cell,
-        vec128: {
-            pos: i,
-            flow: (cell.axe.qi + cell.axe.iqq) / 2,
-            style: cell.tmp % 7
-        }
-    }));
-}
-export async function RUN360(){
-    const base = await RUN8();
-    const portal = RUN9(base.index);
-    const cluster = RUN12(base.index);
-    const vec128 = RUN128(base.index);
+<script type="module">
 
-    return {
-        ...base,
-        portal,
-        cluster,
-        vec128
-    };
-}
-export function ECO(cell){
-    const eco = (cell.depth + cell.breite + cell.hoehe) / 3;
-    return eco.toFixed(3);
-}
-export function ANIME_STYLE(cell){
-    const style = cell.tmp % 7;
-
-    return [
-        "calm",
-        "sharp",
-        "flow",
-        "pulse",
-        "echo",
-        "flare",
-        "nova"
-    ][style];
-}
-export function IDENTITY(cell){
-    return {
-        arc: cell.depth > 50 ? "ascend" : "base",
-        role: cell.tmp % 5,
-        mood: cell.axe.gamma > 0.7 ? "bright" : "shadow"
-    };
-}
 import { RUN360 } from "./core/RUN360.js";
+import { RUN9 } from "./core/RUN9.js";
+import { RUN12 } from "./core/RUN12.js";
+import { RUN128 } from "./core/RUN128.js";
+import { ECO } from "./core/ECO.js";
+import { IDENTITY } from "./core/BETA.js";
+import { ANIME_STYLE } from "./core/BETA.js";
+
+/* ============================================================
+   START – FULL SYSTEM
+============================================================ */
 
 const full = await RUN360();
 
+/* ============================================================
+   RUN 9 – PORTAL MAP
+============================================================ */
+
+const portal = RUN9(full.index);
+
+document.getElementById("portalMap").innerText =
+    portal.slice(0,60).map(p =>
+        `${p.id} | Portal ${p.portal} | Warp ${p.warp} | Jump ${p.jump}`
+    ).join("\n");
+
+/* ============================================================
+   RUN 12 – HYPERRAUM CLUSTER
+============================================================ */
+
+const cluster = RUN12(full.index);
+
+document.getElementById("clusterTree").innerText =
+    Object.entries(cluster).map(([k,v]) =>
+        `Gamma Cluster ${k} → ${v.length} Elemente`
+    ).join("\n");
+
+/* ============================================================
+   VEC128 – ANIME FLOW
+============================================================ */
+
+const vec128 = RUN128(full.index);
+
+document.getElementById("vec128").innerText =
+    vec128.map(v =>
+        `${v.id} | Flow ${v.vec128.flow.toFixed(3)} | Style ${ANIME_STYLE(v)}`
+    ).join("\n");
+
+/* ============================================================
+   ECO – ÖKOSYSTEM BALANCE
+============================================================ */
+
+document.getElementById("ecoBar").innerText =
+    full.index.slice(0,50).map(cell => {
+        const eco = ECO(cell);
+        const bar = "■".repeat(Math.floor(eco*50)) + "□".repeat(50-Math.floor(eco*50));
+        return `${cell.id} | ${bar} ${eco}`;
+    }).join("\n");
+
+/* ============================================================
+   IDENTITY MATRIX – ARC / ROLE / MOOD
+============================================================ */
+
+document.getElementById("identityMatrix").innerText =
+    full.index.slice(0,50).map(cell => {
+        const id = IDENTITY(cell);
+        return `${cell.id} | arc:${id.arc} | role:${id.role} | mood:${id.mood}`;
+    }).join("\n");
+
+/* ============================================================
+   RUN 360 – FULL SYSTEM
+============================================================ */
+
 document.getElementById("run360").innerText =
     JSON.stringify(full, null, 2);
-<h2>RUN 360 – Full System</h2>
+
+</script>
+</head>
+
+<body>
+
+<h1>INDEX – 360° LIVE DASHBOARD</h1>
+
+<div class="section">
+<h2>RUN 9 – Portal Map</h2>
+<pre id="portalMap"></pre>
+</div>
+
+<div class="section">
+<h2>RUN 12 – Hyperraum Cluster</h2>
+<pre id="clusterTree"></pre>
+</div>
+
+<div class="section">
+<h2>VEC128 – Anime Flow</h2>
+<pre id="vec128"></pre>
+</div>
+
+<div class="section">
+<h2>ECO – Ökosystem Balance</h2>
+<pre id="ecoBar"></pre>
+</div>
+
+<div class="section">
+<h2>Identity Matrix – Charakter</h2>
+<pre id="identityMatrix"></pre>
+</div>
+
+<div class="section">
+<h2>RUN 360 – Full System Dump</h2>
 <pre id="run360"></pre>
+</div>
+
+</body>
+</html>
