@@ -1,0 +1,4 @@
+A → Warp  0–100   | Sprünge: linear
+B → Warp 100–200  | Sprünge: diagonal
+C → Warp 200–300  | Sprünge: chaotisch
+D → Warp 300–410  | Sprünge: spirale
