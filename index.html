@@ -2,14 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>INDEX – MASTER SYSTEM 360°</title>
-INDEX.SYSTEM = {
-  POS: AUTO.POS,
-  SCORE: AUTO.POS.SCORE,
-  LAGE: AUTO.POS.LAGE,
-  AXIOM: AXIOM.TRIANGLE,
-  RESULT: AUTO.sys.RESULT
-}
+<title>INDEX – AUTO DOMINANT SYSTEM 360°</title>
 
 <style>
 body { background:#000; color:#0f0; font-family:monospace; }
@@ -18,20 +11,6 @@ h2 { color:#0f0; margin-top:30px; }
 pre { border:1px solid #0f0; padding:10px; background:#111; }
 .section { margin-bottom:40px; }
 </style>
-
-<!-- CORE MODULES -->
-<script type="module" src="./core/RUN360.js"></script>
-<script type="module" src="./core/RUN9.js"></script>
-<script type="module" src="./core/RUN12.js"></script>
-<script type="module" src="./core/RUN128.js"></script>
-<script type="module" src="./core/ECO.js"></script>
-<script type="module" src="./core/BETA.js"></script>
-<script type="module" src="./core/GAMMA.js"></script>
-<script type="module" src="./core/HTML.js"></script>
-
-<!-- SYSTEM MODULES -->
-<script type="module" src="./sys/master.sys"></script>
-<script type="module" src="./sys/SLAVE.sys"></script>
 
 <script type="module">
 
@@ -43,118 +22,81 @@ import { ECO } from "./core/ECO.js";
 import { IDENTITY } from "./core/BETA.js";
 import { ANIME_STYLE } from "./core/BETA.js";
 
+import MASTER from "./sys/master.sys";
+import SLAVE from "./sys/SLAVE.sys";
+import AUTO from "./sys/AUTO.sys";
+
 /* ============================================================
-   MASTER SYSTEM – LIS × LIST
+   AUTO – DOMINANT SYSTEM
 ============================================================ */
 
-const MASTER = {
-  MASTER: "LIS × LIST",
-  SLAVE: "RU",
-  BLOCK: "N",
-  MODE: "REAL",
-  RANGE: "360° × 360°",
-  STATE: "ACTIVE"
-};
-
-document.getElementById("masterSystem").innerText =
-  Object.entries(MASTER).map(([k,v]) => `${k}: ${v}`).join("\n");
+document.getElementById("autoSystem").innerText =
+  JSON.stringify(AUTO, null, 2);
 
 /* ============================================================
-   START – FULL SYSTEM
+   FULL SYSTEM
 ============================================================ */
 
 const full = await RUN360();
 
 /* ============================================================
-   WARP KLASSEN – A LIST
+   RUN 9 – Portal Map
 ============================================================ */
-
-const WARP = {
-  A: "Warp 0–100 | linear",
-  B: "Warp 100–200 | diagonal",
-  C: "Warp 200–300 | chaotisch",
-  D: "Warp 300–410 | spirale"
-};
-
-document.getElementById("warpList").innerText =
-  Object.entries(WARP).map(([k,v]) => `${k} → ${v}`).join("\n");
-
-/* ============================================================
-   RUN 9 – PORTAL MAP
-============================================================ */
-
-const portal = RUN9(full.index);
 
 document.getElementById("portalMap").innerText =
-    portal.slice(0,60).map(p =>
-        `${p.id} | Portal ${p.portal} | Warp ${p.warp} | Jump ${p.jump}`
-    ).join("\n");
+  RUN9(full.index).slice(0,60).map(p =>
+    `${p.id} | Portal ${p.portal} | Warp ${p.warp} | Jump ${p.jump}`
+  ).join("\n");
 
 /* ============================================================
-   RUN 12 – HYPERRAUM CLUSTER
+   RUN 12 – Hyperraum Cluster
 ============================================================ */
-
-const cluster = RUN12(full.index);
 
 document.getElementById("clusterTree").innerText =
-    Object.entries(cluster).map(([k,v]) =>
-        `Gamma Cluster ${k} → ${v.length} Elemente`
-    ).join("\n");
+  Object.entries(RUN12(full.index)).map(([k,v]) =>
+    `Gamma Cluster ${k} → ${v.length} Elemente`
+  ).join("\n");
 
 /* ============================================================
-   VEC128 – ANIME FLOW
+   VEC128 – Anime Flow
 ============================================================ */
 
-const vec128 = RUN128(full.index);
-
 document.getElementById("vec128").innerText =
-    vec128.map(v =>
-        `${v.id} | Flow ${v.vec128.flow.toFixed(3)} | Style ${ANIME_STYLE(v)}`
-    ).join("\n");
+  RUN128(full.index).map(v =>
+    `${v.id} | Flow ${v.vec128.flow.toFixed(3)} | Style ${ANIME_STYLE(v)}`
+  ).join("\n");
 
 /* ============================================================
    ECO – Ökosystem Balance
 ============================================================ */
 
 document.getElementById("ecoBar").innerText =
-    full.index.slice(0,50).map(cell => {
-        const eco = ECO(cell);
-        const bar = "■".repeat(Math.floor(eco*50)) + "□".repeat(50-Math.floor(eco*50));
-        return `${cell.id} | ${bar} ${eco}`;
-    }).join("\n");
+  full.index.slice(0,50).map(cell => {
+    const eco = ECO(cell);
+    const bar = "■".repeat(Math.floor(eco*50)) + "□".repeat(50-Math.floor(eco*50));
+    return `${cell.id} | ${bar} ${eco}`;
+  }).join("\n");
 
 /* ============================================================
-   IDENTITY MATRIX – ARC / ROLE / MOOD
+   IDENTITY MATRIX
 ============================================================ */
 
 document.getElementById("identityMatrix").innerText =
-    full.index.slice(0,50).map(cell => {
-        const id = IDENTITY(cell);
-        return `${cell.id} | arc:${id.arc} | role:${id.role} | mood:${id.mood}`;
-    }).join("\n");
-
-/* ============================================================
-   RUN 360 – FULL SYSTEM
-============================================================ */
-
-document.getElementById("run360").innerText =
-    JSON.stringify(full, null, 2);
+  full.index.slice(0,50).map(cell => {
+    const id = IDENTITY(cell);
+    return `${cell.id} | arc:${id.arc} | role:${id.role} | mood:${id.mood}`;
+  }).join("\n");
 
 </script>
 </head>
 
 <body>
 
-<h1>INDEX – MASTER SYSTEM 360°</h1>
+<h1>INDEX – AUTO DOMINANT SYSTEM 360°</h1>
 
 <div class="section">
-<h2>MASTER SYSTEM</h2>
-<pre id="masterSystem"></pre>
-</div>
-
-<div class="section">
-<h2>WARP – A LIST</h2>
-<pre id="warpList"></pre>
+<h2>AUTO SYSTEM – Dominant</h2>
+<pre id="autoSystem"></pre>
 </div>
 
 <div class="section">
@@ -180,11 +122,6 @@ document.getElementById("run360").innerText =
 <div class="section">
 <h2>Identity Matrix – Charakter</h2>
 <pre id="identityMatrix"></pre>
-</div>
-
-<div class="section">
-<h2>RUN 360 – Full System Dump</h2>
-<pre id="run360"></pre>
 </div>
 
 </body>
