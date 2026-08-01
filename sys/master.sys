@@ -1,9 +1,6 @@
 SYSTEM.MASTER = {
   CORE: LIS × LIST,
   WEAK: true,
-
-  AXIOM: AXIOM.TRIANGLE,
-  MODE: "REAL",
-  STATE: "ACTIVE",
+  AXIOM: "H×B×T",
   RANGE: "360° × 360° × 360°"
-}
+};
