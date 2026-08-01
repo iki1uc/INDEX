@@ -1,0 +1,9 @@
+export function VECTOR_RUN(list) {
+  return list.map(v => ({
+    id: v.id,
+    color: v.color,
+    point: `(${v.axis.x},${v.axis.y},${v.axis.z})`,
+    power: v.power.toFixed(2),
+    dir: v.dir
+  }));
+}
