@@ -2,10 +2,6 @@ SYSTEM.SLAVE = {
   CORE: RU,
   ROLE: "RUNNER",
   WEAK: true,
-
   BLOCKER: N,
-  MODE: "AUTO",
-  STATE: "ACTIVE",
-
-  AXIOM: AXIOM.TRIANGLE
-}
+  AXIOM: "H×B×T"
+};
