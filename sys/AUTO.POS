@@ -2,5 +2,19 @@ AUTO.POS = {
   HEIGHT: AXIOM.H,
   WIDTH:  AXIOM.B,
   DEPTH:  AXIOM.T,
-  TRIANGLE: AXIOM.H × AXIOM.B × AXIOM.T
+
+  TRIANGLE: AXIOM.H * AXIOM.B * AXIOM.T,
+
+  SCORE: {
+    MASTER: SYSTEM.MASTER.WEAK ? 0.3 : 1.0,
+    SLAVE:  SYSTEM.SLAVE.WEAK  ? 0.3 : 1.0,
+    AUTO:   1.0
+  },
+
+  LAGE: {
+    X: AXIOM.H,
+    Y: AXIOM.B,
+    Z: AXIOM.T,
+    DOMINANT: "AUTO"
+  }
 }
