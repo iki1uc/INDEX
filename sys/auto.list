@@ -1,1 +1,9 @@
+AUTO.LIST = [
+  { id:"off",  state:"offline", color:"#444444" },
+  { id:"f1",   state:"fail",    color:"#ff0000" },
+  { id:"m1",   state:"miss",    color:"#ff0066" },
+  { id:"r1",   state:"rdy",     color:"#00ccff" },
+  { id:"ft1",  state:"fit",     color:"#00ff88" },
+  { id:"fx1",  state:"fix",     color:"#33cc33" }
+];
 
