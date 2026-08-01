@@ -1,0 +1,9 @@
+export const VECTOR_INDEX = {
+  auto: VECTOR_LIST,
+  vec128: AUTO.sys.VECTOR.vec128,
+  run360: AUTO.sys.VECTOR.run360,
+  run128: AUTO.sys.VECTOR.run128,
+  run12: AUTO.sys.VECTOR.run12,
+  run9: AUTO.sys.VECTOR.run9,
+  matrix81: AUTO.sys.VECTOR.matrix81
+};
