@@ -1,6 +1,11 @@
 SYSTEM.SLAVE = {
   CORE: RU,
-  WEAK: TRUE,
+  ROLE: "RUNNER",
+  WEAK: true,
+
   BLOCKER: N,
+  MODE: "AUTO",
+  STATE: "ACTIVE",
+
   AXIOM: AXIOM.TRIANGLE
 }
