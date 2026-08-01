@@ -1,9 +1,19 @@
 AUTO.LIST = [
-  { id:"off",  state:"offline", color:"#444444" },
-  { id:"f1",   state:"fail",    color:"#ff0000" },
-  { id:"m1",   state:"miss",    color:"#ff0066" },
-  { id:"r1",   state:"rdy",     color:"#00ccff" },
-  { id:"ft1",  state:"fit",     color:"#00ff88" },
-  { id:"fx1",  state:"fix",     color:"#33cc33" }
-];
+  { id:"off",  state:"offline", tmp:"t0", color:"#444444",
+    vec:{ x:0,  y:0,  z:0,  power:0.0, dir:"none" } },
 
+  { id:"f1",   state:"fail",    tmp:"t1", color:"#ff0000",
+    vec:{ x:-1, y:0,  z:0,  power:1.0, dir:"neg-x" } },
+
+  { id:"m1",   state:"miss",    tmp:"t2", color:"#ff0066",
+    vec:{ x:0,  y:-1, z:0,  power:0.8, dir:"neg-y" } },
+
+  { id:"r1",   state:"rdy",     tmp:"t3", color:"#00ccff",
+    vec:{ x:0,  y:1,  z:0,  power:0.6, dir:"pos-y" } },
+
+  { id:"ft1",  state:"fit",     tmp:"t4", color:"#00ff88",
+    vec:{ x:1,  y:0,  z:0,  power:0.9, dir:"pos-x" } },
+
+  { id:"fx1",  state:"fix",     tmp:"t5", color:"#33cc33",
+    vec:{ x:0,  y:0,  z:1,  power:1.0, dir:"pos-z" } }
+];
