@@ -1,0 +1,8 @@
+export function VECTOR_MEASURE(vec) {
+  return {
+    axis: { x: vec.x, y: vec.y, z: vec.z },
+    power: Math.sqrt(vec.x*vec.x + vec.y*vec.y + vec.z*vec.z),
+    dir: vec.dir,
+    color: vec.color || null
+  };
+}
