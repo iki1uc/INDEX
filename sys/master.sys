@@ -1,33 +1,6 @@
 SYSTEM.MASTER = {
   CORE: LIS × LIST,
-
-  AXIOM: {
-    HEIGHT: H,
-    WIDTH:  B,
-    DEPTH:  T,
-    TRIANGLE: H × B × T
-  },
-
-  RUN:   [RUN360, RUN128, RUN12, RUN9],
-  WARP:  [A, B, C, D],
-  VEC:   [VECTOR, VEC128],
-  ROLE:  CHESS.ROLE,
-  BAL:   ECO,
-  ID:    BETA,
-  GAMMA: GAMMA,
-  MATRIX: MATRIX81,
-
-  PORTAL: INDEX.portal,
-  HYPER:  INDEX.hyperraum,
-  RESPO:  INDEX.respo,
-  WARB:   INDEX.warb,
-  MEGA:   MEGA_INDEX,
-  ZOOM:   MEGA_INDEX.zoom,
-
-  SLAVE: RU,
-  BLOCK: N,
-
-  STATE: ACTIVE,
-  MODE: REAL,
+  WEAK: TRUE,
+  AXIOM: AXIOM.TRIANGLE,
   RANGE: "360° × 360° × 360°"
 }
