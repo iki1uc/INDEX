@@ -1,6 +1,27 @@
 AUTO.sys = {
   CORE: SYSTEM,
-  DOMINANT: TRUE,
-  POS: AUTO.POS,
-  RESULT: 6
+  DOMINANT: true,
+
+  AXIOM: {
+    HEIGHT: AXIOM.H,
+    WIDTH:  AXIOM.B,
+    DEPTH:  AXIOM.T,
+    TRIANGLE: AXIOM.H * AXIOM.B * AXIOM.T
+  },
+
+  POS: {
+    X: AXIOM.H,
+    Y: AXIOM.B,
+    Z: AXIOM.T,
+    DOMINANT: "AUTO"
+  },
+
+  SCORE: {
+    MASTER: SYSTEM.MASTER.WEAK ? 0.3 : 1.0,
+    SLAVE:  SYSTEM.SLAVE.WEAK  ? 0.3 : 1.0,
+    AUTO:   1.0
+  },
+
+  RESULT: 6,
+  STATE: "ACTIVE"
 }
