@@ -1,61 +1,28 @@
 import { AUTO_LIST } from "./auto.list";
 import { VECTOR_MEASURE } from "./vector.measure";
-import { VEC128 } from "../core/VEC128.js";
-import { RUN360_VECTOR } from "../core/RUN360.js";
-import { RUN128_VECTOR } from "../core/RUN128.js";
-import { RUN12_VECTOR } from "../core/RUN12.js";
-import { RUN9_VECTOR } from "../core/RUN9.js";
-import { MATRIX81_VECTOR } from "../core/matrix81.js";
 
 /* ============================================================
-   VECTOR_index.list.index.allrespo
-   – komplette Vektor‑Matrix aller Stationen
+   RESPO – reine Vektor‑Basis
+============================================================ */
+
+export const VECTOR_RESPO = AUTO_LIST.map(v => ({
+  id: v.id,
+  state: v.state,
+  color: v.color,
+  vec: VECTOR_MEASURE(v.vec)
+}));
+
+/* ============================================================
+   ALL – alle Vektor‑Stationen, aber RESPO ist Basis
 ============================================================ */
 
 export const VECTOR_INDEX_ALLRESPO = {
-
-  /* AUTO – RESPO Vektoren */
-  auto: AUTO_LIST.map(v => ({
-    id: v.id,
-    state: v.state,
-    color: v.color,
-    vec: VECTOR_MEASURE(v.vec)
-  })),
-
-  /* VEC128 – Anime Flow */
-  vec128: VEC128.map(v => ({
-    id: v.id,
-    color: v.vec128.color || "#0f0",
-    vec: VECTOR_MEASURE(v.vec128)
-  })),
-
-  /* RUN360 – 360° System */
-  run360: RUN360_VECTOR.map(v => ({
-    id: v.id,
-    vec: VECTOR_MEASURE(v)
-  })),
-
-  /* RUN128 – Flow System */
-  run128: RUN128_VECTOR.map(v => ({
-    id: v.id,
-    vec: VECTOR_MEASURE(v)
-  })),
-
-  /* RUN12 – Cluster System */
-  run12: RUN12_VECTOR.map(v => ({
-    id: v.id,
-    vec: VECTOR_MEASURE(v)
-  })),
-
-  /* RUN9 – Portal System */
-  run9: RUN9_VECTOR.map(v => ({
-    id: v.id,
-    vec: VECTOR_MEASURE(v)
-  })),
-
-  /* MATRIX81 – Matrix System */
-  matrix81: MATRIX81_VECTOR.map(v => ({
-    id: v.id,
-    vec: VECTOR_MEASURE(v)
-  }))
+  base: VECTOR_RESPO,   // reine Vektoren
+  auto: VECTOR_RESPO,   // AUTO nutzt RESPO als Basis
+  vec128: [],           // wird später gemessen
+  run360: [],
+  run128: [],
+  run12: [],
+  run9: [],
+  matrix81: []
 };
