@@ -1,0 +1,8 @@
+export const VECTOR_LIST = AUTO.sys.VECTOR.auto.map((v,i) => ({
+  id: AUTO.LIST[i].id,
+  state: AUTO.LIST[i].state,
+  color: AUTO.LIST[i].color,
+  axis: v.axis,
+  power: v.power,
+  dir: v.dir
+}));
