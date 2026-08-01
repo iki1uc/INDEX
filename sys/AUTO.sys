@@ -1,27 +1,30 @@
+import { AUTO_LIST } from "./auto.list";
+
 AUTO.sys = {
-  CORE: SYSTEM,
   DOMINANT: true,
 
+  RESPO: AUTO_LIST,
+
   AXIOM: {
-    HEIGHT: AXIOM.H,
-    WIDTH:  AXIOM.B,
-    DEPTH:  AXIOM.T,
-    TRIANGLE: AXIOM.H * AXIOM.B * AXIOM.T
+    H: 1,
+    B: 1,
+    T: 1,
+    TRIANGLE: 1 * 1 * 1
   },
 
   POS: {
-    X: AXIOM.H,
-    Y: AXIOM.B,
-    Z: AXIOM.T,
+    X: 1,
+    Y: 1,
+    Z: 1,
     DOMINANT: "AUTO"
   },
 
   SCORE: {
-    MASTER: SYSTEM.MASTER.WEAK ? 0.3 : 1.0,
-    SLAVE:  SYSTEM.SLAVE.WEAK  ? 0.3 : 1.0,
+    MASTER: 0.3,
+    SLAVE:  0.3,
     AUTO:   1.0
   },
 
   RESULT: 6,
   STATE: "ACTIVE"
-}
+};
