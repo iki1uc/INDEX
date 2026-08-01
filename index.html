@@ -2,17 +2,17 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>INDEX – 360° LIVE DASHBOARD</title>
+<title>INDEX – MASTER SYSTEM 360°</title>
 
 <style>
 body { background:#000; color:#0f0; font-family:monospace; }
+h1 { color:#6cf; letter-spacing:4px; }
 h2 { color:#0f0; margin-top:30px; }
 pre { border:1px solid #0f0; padding:10px; background:#111; }
 .section { margin-bottom:40px; }
-.bar { font-family:monospace; }
 </style>
 
-<!-- MODULES -->
+<!-- CORE MODULES -->
 <script type="module" src="./core/RUN360.js"></script>
 <script type="module" src="./core/RUN9.js"></script>
 <script type="module" src="./core/RUN12.js"></script>
@@ -21,6 +21,10 @@ pre { border:1px solid #0f0; padding:10px; background:#111; }
 <script type="module" src="./core/BETA.js"></script>
 <script type="module" src="./core/GAMMA.js"></script>
 <script type="module" src="./core/HTML.js"></script>
+
+<!-- SYSTEM MODULES -->
+<script type="module" src="./sys/master.sys"></script>
+<script type="module" src="./sys/SLAVE.sys"></script>
 
 <script type="module">
 
@@ -33,10 +37,40 @@ import { IDENTITY } from "./core/BETA.js";
 import { ANIME_STYLE } from "./core/BETA.js";
 
 /* ============================================================
+   MASTER SYSTEM – LIS × LIST
+============================================================ */
+
+const MASTER = {
+  MASTER: "LIS × LIST",
+  SLAVE: "RU",
+  BLOCK: "N",
+  MODE: "REAL",
+  RANGE: "360° × 360°",
+  STATE: "ACTIVE"
+};
+
+document.getElementById("masterSystem").innerText =
+  Object.entries(MASTER).map(([k,v]) => `${k}: ${v}`).join("\n");
+
+/* ============================================================
    START – FULL SYSTEM
 ============================================================ */
 
 const full = await RUN360();
+
+/* ============================================================
+   WARP KLASSEN – A LIST
+============================================================ */
+
+const WARP = {
+  A: "Warp 0–100 | linear",
+  B: "Warp 100–200 | diagonal",
+  C: "Warp 200–300 | chaotisch",
+  D: "Warp 300–410 | spirale"
+};
+
+document.getElementById("warpList").innerText =
+  Object.entries(WARP).map(([k,v]) => `${k} → ${v}`).join("\n");
 
 /* ============================================================
    RUN 9 – PORTAL MAP
@@ -72,7 +106,7 @@ document.getElementById("vec128").innerText =
     ).join("\n");
 
 /* ============================================================
-   ECO – ÖKOSYSTEM BALANCE
+   ECO – Ökosystem Balance
 ============================================================ */
 
 document.getElementById("ecoBar").innerText =
@@ -104,7 +138,17 @@ document.getElementById("run360").innerText =
 
 <body>
 
-<h1>INDEX – 360° LIVE DASHBOARD</h1>
+<h1>INDEX – MASTER SYSTEM 360°</h1>
+
+<div class="section">
+<h2>MASTER SYSTEM</h2>
+<pre id="masterSystem"></pre>
+</div>
+
+<div class="section">
+<h2>WARP – A LIST</h2>
+<pre id="warpList"></pre>
+</div>
 
 <div class="section">
 <h2>RUN 9 – Portal Map</h2>
