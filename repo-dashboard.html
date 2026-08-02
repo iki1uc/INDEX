@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Repo Dashboard</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  body {
+    background:#0b0e14;
+    color:#e2e8f0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    margin:0;
+    padding:20px;
+  }
+  h1 { font-size:20px; margin-bottom:4px; }
+  p.sub { color:#94a3b8; margin-top:0; font-size:14px; }
+  #controls {
+    display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    margin:16px 0; padding:14px; background:#161b26; border-radius:10px;
+  }
+  input {
+    background:#0b0e14; border:1px solid #2d3748; color:#e2e8f0;
+    padding:8px 10px; border-radius:6px; font-size:14px;
+  }
+  input#username { width:180px; }
+  input#token { width:260px; }
+  button {
+    background:#3b82f6; color:white; border:none; padding:8px 16px;
+    border-radius:6px; cursor:pointer; font-size:14px;
+  }
+  button:hover { background:#2563eb; }
+  #legend { display:flex; gap:16px; margin:10px 0 20px 0; font-size:13px; color:#94a3b8; }
+  .dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:5px; }
+  #status { color:#94a3b8; font-size:14px; margin-bottom:10px; }
+  #grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
+    gap:12px;
+  }
+  .card {
+    background:#161b26; border:1px solid #232938; border-radius:10px;
+    padding:14px; cursor:pointer; transition:transform .15s;
+  }
+  .card:hover { transform:translateY(-2px); border-color:#3b82f6; }
+  .card-top { display:flex; justify-content:space-between; align-items:center; }
+  .name { font-weight:600; font-size:14px; word-break:break-word; }
+  .square {
+    width:16px; height:16px; border-radius:4px; flex-shrink:0; margin-left:8px;
+  }
+  .meta { color:#94a3b8; font-size:12px; margin-top:8px; }
+  .hint { color:#64748b; font-size:11px; margin-top:6px; }
+  a { color:#7dd3fc; text-decoration:none; }
+</style>
+</head>
+<body>
+
+<h1>Repo Dashboard</h1>
+<p class="sub">Zeigt alle Repos eines GitHub-Accounts mit Ampel-Status. Klick auf eine Kachel, um die Farbe manuell zu überschreiben (wird lokal gespeichert).</p>
+
+<div id="controls">
+  <input id="username" placeholder="GitHub-Benutzername" value="iki1uc">
+  <input id="token" placeholder="Personal Access Token (optional, für private Repos)" type="password">
+  <button onclick="loadRepos()">Laden</button>
+</div>
+
+<div id="legend">
+  <span><span class="dot" style="background:#22c55e"></span>Grün = fertig / aktiv gepflegt</span>
+  <span><span class="dot" style="background:#eab308"></span>Gelb = in Arbeit / offene Issues</span>
+  <span><span class="dot" style="background:#ef4444"></span>Rot = lange inaktiv / Error</span>
+</div>
+
+<div id="status"></div>
+<div id="grid"></div>
+
+<script>
+const statusEl = document.getElementById('status');
+const gridEl = document.getElementById('grid');
+
+function loadOverrides(){
+  try { return JSON.parse(localStorage.getItem('repo-dashboard-overrides') || '{}'); }
+  catch(e){ return {}; }
+}
+function saveOverride(repoName, color){
+  const o = loadOverrides();
+  o[repoName] = color;
+  localStorage.setItem('repo-dashboard-overrides', JSON.stringify(o));
+}
+
+function autoColor(repo){
+  const monthsSincePush = (Date.now() - new Date(repo.pushed_at)) / (1000*60*60*24*30);
+  if (monthsSincePush > 6) return '#ef4444';       // rot: lange nichts passiert
+  if (repo.open_issues_count > 0) return '#eab308'; // gelb: offene Issues/in Arbeit
+  return '#22c55e';                                 // grün: aktiv, keine offenen Issues
+}
+
+function cycleColor(current){
+  const order = ['#22c55e', '#eab308', '#ef4444'];
+  const idx = order.indexOf(current);
+  return order[(idx + 1) % order.length];
+}
+
+async function loadRepos(){
+  const username = document.getElementById('username').value.trim();
+  const token = document.getElementById('token').value.trim();
+  if(!username){ statusEl.textContent = 'Bitte Benutzername eingeben.'; return; }
+
+  statusEl.textContent = 'Lade Repos...';
+  gridEl.innerHTML = '';
+
+  const headers = { 'Accept': 'application/vnd.github+json' };
+  if(token) headers['Authorization'] = 'Bearer ' + token;
+
+  let repos = [];
+  let page = 1;
+  try {
+    while(true){
+      const url = token
+        ? `https://api.github.com/user/repos?per_page=100&page=${page}&affiliation=owner`
+        : `https://api.github.com/users/${username}/repos?per_page=100&page=${page}`;
+      const res = await fetch(url, { headers });
+      if(!res.ok){
+        const body = await res.text();
+        throw new Error(`GitHub API Fehler ${res.status}: ${body.slice(0,200)}`);
+      }
+      const data = await res.json();
+      repos = repos.concat(data);
+      if(data.length < 100) break;
+      page++;
+      if(page > 20) break; // Sicherheitslimit
+    }
+  } catch(err){
+    statusEl.textContent = 'Fehler: ' + err.message;
+    return;
+  }
+
+  if(repos.length === 0){
+    statusEl.textContent = 'Keine Repos gefunden.';
+    return;
+  }
+
+  statusEl.textContent = `${repos.length} Repos geladen.`;
+  const overrides = loadOverrides();
+
+  repos
+    .sort((a,b) => new Date(b.pushed_at) - new Date(a.pushed_at))
+    .forEach(repo => {
+      const color = overrides[repo.full_name] || autoColor(repo);
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-top">
+          <div class="name">${repo.name}</div>
+          <div class="square" style="background:${color}"></div>
+        </div>
+        <div class="meta">
+          Letzter Push: ${new Date(repo.pushed_at).toLocaleDateString('de-DE')}<br>
+          Offene Issues: ${repo.open_issues_count}${repo.private ? ' · privat' : ''}
+        </div>
+        <div class="hint"><a href="${repo.html_url}" target="_blank" onclick="event.stopPropagation()">auf GitHub öffnen</a> · Klick = Farbe manuell setzen</div>
+      `;
+      card.querySelector('.square').addEventListener('click', (e) => {
+        e.stopPropagation();
+        const sq = e.target;
+        const newColor = cycleColor(sq.style.backgroundColor === '' ? color : rgbToHex(sq.style.background) || color);
+        sq.style.background = newColor;
+        saveOverride(repo.full_name, newColor);
+      });
+      gridEl.appendChild(card);
+    });
+}
+
+function rgbToHex(rgb){
+  const map = { 'rgb(34, 197, 94)':'#22c55e', 'rgb(234, 179, 8)':'#eab308', 'rgb(239, 68, 68)':'#ef4444' };
+  return map[rgb] || null;
+}
+
+// Automatisch beim Öffnen laden
+loadRepos();
+</script>
+
+</body>
+</html>
